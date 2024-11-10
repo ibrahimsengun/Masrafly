@@ -1,4 +1,4 @@
-import { signInWithGoogleAction, signUpAction } from '@/app/actions';
+import { signUpAction } from '@/app/actions';
 import { SubmitButton } from '@/components/submit-button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -30,9 +30,6 @@ export default async function Signup() {
             Sign up
           </SubmitButton>
         </div>
-      </form>
-      <form>
-        <SubmitButton formAction={signInWithGoogleAction}>Google Login</SubmitButton>
       </form>
     </>
   );
