@@ -1,4 +1,4 @@
-import { signInWithGoogleAction } from '@/app/actions';
+import { signInWithGoogleAction } from '@/actions/auth-actions';
 import { SubmitButton } from '@/components/submit-button';
 
 const SignInWithGoogleForm = () => {

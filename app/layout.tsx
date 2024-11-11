@@ -1,5 +1,6 @@
 import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
+import { createClient } from '@/utils/supabase/server';
 import { GeistSans } from 'geist/font/sans';
 import { ThemeProvider } from 'next-themes';
 import './globals.css';
@@ -14,7 +15,13 @@ export const metadata = {
   description: 'The fastest way to build apps with Next.js and Supabase'
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const supabase = await createClient();
+
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+
   return (
     <html lang="en" className={GeistSans.className} suppressHydrationWarning>
       <body className="min-h-screen bg-background text-foreground">
@@ -24,8 +31,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           enableSystem
           disableTransitionOnChange
         >
-          <Header />
-          <main className="flex flex-col items-center"></main>
+          <Header user={user} />
+          <main className="flex flex-col items-center">{children}</main>
           <Footer />
         </ThemeProvider>
       </body>
