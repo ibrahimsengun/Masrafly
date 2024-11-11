@@ -24,7 +24,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang="en" className={GeistSans.className} suppressHydrationWarning>
-      <body className="min-h-screen bg-background text-foreground">
+      <body className="bg-background text-foreground">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -32,7 +32,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           disableTransitionOnChange
         >
           <Header user={user} />
-          <main className="flex flex-col items-center">{children}</main>
+          <main className="flex flex-col justify-start items-start min-h-[calc(100vh-180px)] container mx-auto">
+            {children}
+          </main>
           <Footer />
         </ThemeProvider>
       </body>

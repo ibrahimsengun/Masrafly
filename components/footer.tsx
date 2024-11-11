@@ -2,7 +2,7 @@
 
 export const Footer = () => {
   return (
-    <div className="flex flex-row justify-center items-center p-4 text-sm border-t mt-4">
+    <footer className="flex flex-row justify-center items-center p-4 text-sm border-t mt-4 h-[60px]">
       develop by
       <a
         href="https://github.com/ibrahimsengun"
@@ -11,6 +11,6 @@ export const Footer = () => {
       >
         ibrahimsengun
       </a>
-    </div>
+    </footer>
   );
 };
