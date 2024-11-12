@@ -5,6 +5,7 @@ import { addSource } from '@/actions/source-actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useToast } from '@/hooks/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -20,6 +21,8 @@ type SourceFormData = z.infer<typeof sourceSchema>;
 export default function AddSourceForm() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
+
+  const { toast } = useToast();
 
   const {
     register,
@@ -38,8 +41,16 @@ export default function AddSourceForm() {
       await addSource(data.name, data.balance);
       reset();
       setSuccess(true);
+      toast({
+        title: 'Source added successfully!',
+        description: 'Your source has been added to your account.'
+      });
     } catch (err: any) {
       setError(err.message || 'Failed to add source');
+      toast({
+        title: 'Failed to add source',
+        description: err.message || 'An error occurred while adding your source.'
+      });
     }
   };
 

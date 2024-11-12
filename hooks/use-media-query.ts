@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+//usage example: useMediaQuery(min-width: 600px)
 export function useMediaQuery(query: string) {
   const [value, setValue] = React.useState(false);
 
