@@ -3,7 +3,7 @@ import { SubmitButton } from '@/components/submit-button';
 
 const SignInWithGoogleForm = () => {
   return (
-    <form>
+    <form className="w-full">
       <SubmitButton formAction={signInWithGoogleAction}>Google Login</SubmitButton>
     </form>
   );

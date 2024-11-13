@@ -1,10 +1,10 @@
-// components/AddSourceForm.tsx
 'use client';
 
-import { addSource } from '@/actions/source-actions';
+import { addSourceAction } from '@/actions/source-actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useSource } from '@/context/source-context';
 import { useToast } from '@/hooks/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
@@ -18,10 +18,11 @@ const sourceSchema = z.object({
 
 type SourceFormData = z.infer<typeof sourceSchema>;
 
-export default function AddSourceForm() {
+export default function AddSourceForm({ closeDialog }: { closeDialog?: () => void }) {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
 
+  const { refreshSources } = useSource();
   const { toast } = useToast();
 
   const {
@@ -38,13 +39,15 @@ export default function AddSourceForm() {
     setSuccess(false);
 
     try {
-      await addSource(data.name, data.balance);
+      await addSourceAction(data.name, data.balance);
       reset();
       setSuccess(true);
       toast({
         title: 'Source added successfully!',
         description: 'Your source has been added to your account.'
       });
+      refreshSources();
+      if (closeDialog) closeDialog();
     } catch (err: any) {
       setError(err.message || 'Failed to add source');
       toast({

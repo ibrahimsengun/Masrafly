@@ -2,7 +2,8 @@
 
 import { Button } from '@/components/ui/button';
 import AddSourceForm from '@/forms/add-source-form';
-import { Plus } from 'lucide-react';
+import { PlusCircle } from 'lucide-react';
+import { useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -13,12 +14,13 @@ import {
 } from './ui/dialog';
 
 export const AddSourceButton = () => {
+  const [open, setOpen] = useState(false);
   return (
     <>
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button variant="default" className="flex flex-row items-center justify-start gap-3">
-            <Plus size={16} /> Add Source
+            <PlusCircle size={16} /> Add New Source
           </Button>
         </DialogTrigger>
         <DialogContent>
@@ -26,7 +28,7 @@ export const AddSourceButton = () => {
             <DialogTitle>Add Source</DialogTitle>
             <DialogDescription>For your expenses</DialogDescription>
           </DialogHeader>
-          <AddSourceForm />
+          <AddSourceForm closeDialog={() => setOpen(false)} />
         </DialogContent>
       </Dialog>
     </>

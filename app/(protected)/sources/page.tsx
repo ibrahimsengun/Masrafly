@@ -1,15 +1,11 @@
-'use server';
+import { SourceTable } from '@/components/source-table';
 
-import { AddSourceButton } from '@/components/add-source-button';
-import { SourcesList } from '@/components/sources-list';
-
-export default async function SourcesPage() {
+export default function Sources() {
   return (
-    <div className="grid grid-cols-2 w-full spa">
-      <SourcesList />
-      <div className="self-end justify-self-end">
-        <AddSourceButton />
+    <>
+      <div className="flex w-full mb-6">
+        <SourceTable />
       </div>
-    </div>
+    </>
   );
 }

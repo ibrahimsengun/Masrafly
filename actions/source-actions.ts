@@ -1,11 +1,10 @@
-// actions/sourceActions.ts
 'use server';
 
 import { Source } from '@/types/source';
 import { createClient } from '@/utils/supabase/server';
 import { getUserAction } from './auth-actions';
 
-export const addSource = async (name: string, balance: number): Promise<Source> => {
+export const addSourceAction = async (name: string, balance: number): Promise<Source> => {
   const supabase = await createClient();
   const user = await getUserAction();
 
@@ -22,7 +21,7 @@ export const addSource = async (name: string, balance: number): Promise<Source> 
   return data as Source;
 };
 
-export const getSources = async (): Promise<Source[]> => {
+export const getSourcesAction = async (): Promise<Source[]> => {
   const supabase = await createClient();
   const user = await getUserAction();
 
@@ -30,7 +29,7 @@ export const getSources = async (): Promise<Source[]> => {
     .from('sources')
     .select('*')
     .eq('user_id', user.id)
-    .order('created_at', { ascending: false });
+    .order('created_at', { ascending: true });
 
   if (error) {
     throw new Error(error.message);
@@ -39,13 +38,27 @@ export const getSources = async (): Promise<Source[]> => {
   return data as Source[];
 };
 
-export const updateSourceBalance = async (sourceId: string, newBalance: number): Promise<void> => {
+export const updateSourceBalanceAction = async (
+  sourceId: string,
+  newBalance: number
+): Promise<void> => {
   const supabase = await createClient();
 
   const { error } = await supabase
     .from('sources')
     .update({ balance: newBalance })
     .eq('id', sourceId);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const deleteSourceAction = async (id: string): Promise<void> => {
+  const supabase = await createClient();
+  const user = await getUserAction();
+
+  const { error } = await supabase.from('sources').delete().eq('id', id).eq('user_id', user.id);
 
   if (error) {
     throw new Error(error.message);
