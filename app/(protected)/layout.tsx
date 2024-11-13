@@ -1,5 +1,4 @@
 import { getSourcesAction } from '@/actions/source-actions';
-import Loader from '@/components/loader';
 import { SourceProvider } from '@/context/source-context';
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
@@ -16,9 +15,5 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   }
   const sources = await getSourcesAction();
 
-  return (
-    <SourceProvider initialSources={sources}>
-      <Loader>{children}</Loader>
-    </SourceProvider>
-  );
+  return <SourceProvider initialSources={sources}>{children}</SourceProvider>;
 }
