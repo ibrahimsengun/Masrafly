@@ -11,24 +11,7 @@ const defaultCategories = [
   { name: 'Entertainment', color: '#8A2BE2' }
 ];
 
-export const addDefaultCategoriesAction = async () => {
-  const supabase = await createClient();
-  const user = await getUserAction();
-
-  const categoriesToInsert = defaultCategories.map((category) => ({
-    user_id: user.id,
-    name: category.name,
-    color: category.color
-  }));
-
-  const { error } = await supabase.from('categories').insert(categoriesToInsert);
-
-  if (error) {
-    throw new Error('Failed to add default categories: ' + error.message);
-  }
-};
-
-export const addCategoryAction = async (name: string, color: string): Promise<Category> => {
+export const createCategoryAction = async (name: string, color: string): Promise<Category> => {
   const supabase = await createClient();
   const user = await getUserAction();
 
@@ -57,7 +40,7 @@ export const getCategoriesAction = async (): Promise<Category[]> => {
     throw new Error('User not authenticated');
   }
 
-  const { data, error } = await supabase
+  const { data: categories, error } = await supabase
     .from('categories')
     .select('*')
     .eq('user_id', user.id)
@@ -67,7 +50,35 @@ export const getCategoriesAction = async (): Promise<Category[]> => {
     throw new Error(error.message);
   }
 
-  return data as Category[];
+  // Eğer kullanıcının kategorisi yoksa, varsayılan kategorileri ekleyin
+  if (categories.length === 0) {
+    const categoriesToInsert = defaultCategories.map((category) => ({
+      user_id: user.id,
+      name: category.name,
+      color: category.color
+    }));
+
+    const { error: insertError } = await supabase.from('categories').insert(categoriesToInsert);
+
+    if (insertError) {
+      throw new Error('Failed to add default categories: ' + insertError.message);
+    }
+
+    // Varsayılan kategorileri ekledikten sonra tekrar yükleyin
+    const { data: newCategories, error: reloadError } = await supabase
+      .from('categories')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false });
+
+    if (reloadError) {
+      throw new Error(reloadError.message);
+    }
+
+    return newCategories as Category[];
+  }
+
+  return categories as Category[];
 };
 
 export const deleteCategoryAction = async (categoryId: string): Promise<void> => {

@@ -1,0 +1,109 @@
+'use client';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { useCategory } from '@/context/category-context';
+import CategoryForm from '@/forms/category-form';
+import { Category } from '@/types/category';
+import { Edit, PlusCircle, Trash2 } from 'lucide-react';
+import { useState } from 'react';
+
+export default function CategoryList() {
+  const { categories, deleteCategory } = useCategory();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+
+  return (
+    <div className="min-h-[70vh] md:p-8 w-full">
+      <Card className="max-w-4xl mx-auto">
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle className="text-2xl font-bold">Manage Categories</CardTitle>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button onClick={() => setEditingCategory(null)}>
+                <PlusCircle className="mr-2 h-4 w-4" /> Add New Category
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>{editingCategory ? 'Edit Category' : 'Add New Category'}</DialogTitle>
+                <DialogDescription>
+                  {editingCategory
+                    ? 'Edit your category details here.'
+                    : 'Create a new category for your expenses.'}
+                </DialogDescription>
+              </DialogHeader>
+              <CategoryForm
+                isEdit={!!editingCategory}
+                editingCategory={editingCategory}
+                closeDialog={() => setIsDialogOpen(false)}
+              />
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+                  Cancel
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </CardHeader>
+        <CardContent>
+          {categories.length === 0 ? (
+            <div className="text-center py-8">
+              <p className="text-gray-500 mb-4">You haven't created any categories yet.</p>
+              <Button onClick={() => setIsDialogOpen(true)}>Create Your First Category</Button>
+            </div>
+          ) : (
+            <ScrollArea className="h-[calc(70vh-250px)] pr-4">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {categories.map((category) => (
+                  <Card key={category.id} className="flex flex-col justify-between">
+                    <CardContent className="p-3 pt-6">
+                      <div className="flex flex-col items-center gap-2 mb-2">
+                        <div className="flex items-center space-x-2">
+                          <div
+                            className="w-4 h-4 rounded-full"
+                            style={{ backgroundColor: category.color }}
+                          />
+                          <h3 className="text-lg font-semibold">{category.name}</h3>
+                        </div>
+                        <div className="flex space-x-1">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => {
+                              setEditingCategory(category);
+                              setIsDialogOpen(true);
+                            }}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => deleteCategory(category.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </ScrollArea>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

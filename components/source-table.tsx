@@ -1,7 +1,7 @@
 'use client';
 
 import { useSource } from '@/context/source-context';
-import { Edit, Trash } from 'lucide-react';
+import { Trash } from 'lucide-react';
 import { AddSourceButton } from './add-source-button';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
@@ -46,9 +46,9 @@ export const SourceTable = () => {
                   <TableCell>{new Date(source.created_at).toLocaleDateString()}</TableCell>
                   <TableCell>
                     <div className="flex space-x-2">
-                      <Button variant="ghost" size="sm">
+                      {/* <Button variant="ghost" size="sm">
                         <Edit className="h-4 w-4" />
-                      </Button>
+                      </Button> */}
                       <Dialog>
                         <DialogTrigger asChild>
                           <Button variant="ghost" size="sm">

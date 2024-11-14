@@ -10,7 +10,8 @@ export const Header = ({ user }: { user: User | null }) => {
   const protectedLinks = isLoggedIn
     ? [
         { url: '/dashboard', label: 'Dashboard' },
-        { url: '/sources', label: 'Sources' }
+        { url: '/sources', label: 'Sources' },
+        { url: '/categories', label: 'Categories' }
       ]
     : [];
   return (
