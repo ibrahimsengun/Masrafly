@@ -15,6 +15,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useCategory } from '@/context/category-context';
 import CategoryForm from '@/forms/category-form';
 import { Category } from '@/types/category';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Edit, PlusCircle, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -24,10 +25,12 @@ export default function CategoryList() {
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
 
   return (
-    <div className="min-h-[70vh] md:p-8 w-full">
-      <Card className="max-w-4xl mx-auto">
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-2xl font-bold">Manage Categories</CardTitle>
+    <div className="min-h-[70vh] w-full">
+      <Card className="mx-auto">
+        <CardHeader className="flex flex-row justify-between pt-6">
+          <CardTitle className="text-2xl font-semibold leading-none tracking-tight">
+            Manage Categories
+          </CardTitle>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <Button onClick={() => setEditingCategory(null)}>
@@ -64,42 +67,52 @@ export default function CategoryList() {
             </div>
           ) : (
             <ScrollArea className="h-[calc(70vh-250px)] pr-4">
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {categories.map((category) => (
-                  <Card key={category.id} className="flex flex-col justify-between">
-                    <CardContent className="p-3 pt-6">
-                      <div className="flex flex-col items-center gap-2 mb-2">
-                        <div className="flex items-center space-x-2">
-                          <div
-                            className="w-4 h-4 rounded-full"
-                            style={{ backgroundColor: category.color }}
-                          />
-                          <h3 className="text-lg font-semibold">{category.name}</h3>
-                        </div>
-                        <div className="flex space-x-1">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => {
-                              setEditingCategory(category);
-                              setIsDialogOpen(true);
-                            }}
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => deleteCategory(category.id)}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+              <AnimatePresence>
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                  {categories.map((category) => (
+                    <motion.div
+                      key={category.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Card className="flex flex-col justify-between">
+                        <CardContent className="p-3 pt-6">
+                          <div className="flex flex-col items-center gap-2 mb-2">
+                            <div className="flex items-center space-x-2">
+                              <div
+                                className="w-4 h-4 rounded-full"
+                                style={{ backgroundColor: category.color }}
+                              />
+                              <h3 className="text-lg font-semibold">{category.name}</h3>
+                            </div>
+                            <div className="flex space-x-1">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => {
+                                  setEditingCategory(category);
+                                  setIsDialogOpen(true);
+                                }}
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => deleteCategory(category.id)}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  ))}
+                </div>
+              </AnimatePresence>
             </ScrollArea>
           )}
         </CardContent>
