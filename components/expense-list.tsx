@@ -22,7 +22,9 @@ import {
 
 export default function ExpenseList() {
   const { expenses, deleteExpense } = useExpense();
-  const [openDialog, setOpenDialog] = useState(false);
+  const [openAddExpenseDialog, setOpenAddExpenseDialog] = useState(false);
+  const [openEditExpenseDialog, setOpenEditExpenseDialog] = useState(false);
+  const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
 
   const handleDelete = (id: string) => {
     deleteExpense(id);
@@ -50,7 +52,7 @@ export default function ExpenseList() {
       <CardContent className="flex flex-col gap-6 p-6">
         <div className="flex justify-between">
           <h1 className="text-2xl font-semibold leading-none tracking-tight">Latest Activites</h1>
-          <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+          <Dialog open={openAddExpenseDialog} onOpenChange={setOpenAddExpenseDialog}>
             <DialogTrigger asChild>
               <Button>
                 <PlusCircle className="mr-2 h-4 w-4" /> Add New Expense
@@ -62,7 +64,7 @@ export default function ExpenseList() {
                 <DialogClose />
               </DialogHeader>
               <DialogContent>
-                <ExpenseForm closeDialog={() => setOpenDialog(false)} />
+                <ExpenseForm closeDialog={() => setOpenAddExpenseDialog(false)} />
               </DialogContent>
             </DialogContent>
           </Dialog>
@@ -100,9 +102,34 @@ export default function ExpenseList() {
                         </p>
                       </div>
                       <div className="ml-4 flex">
-                        <Button variant="ghost" size="icon" className="mr-1">
-                          <Edit className="h-4 w-4" />
-                        </Button>
+                        <Dialog
+                          open={openEditExpenseDialog}
+                          onOpenChange={setOpenEditExpenseDialog}
+                        >
+                          <DialogTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="mr-1"
+                              onClick={() => setEditingExpense(expense)}
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle>Update Expense</DialogTitle>
+                              <DialogClose />
+                            </DialogHeader>
+                            <DialogContent>
+                              <ExpenseForm
+                                isEdit
+                                editingExpense={editingExpense!}
+                                closeDialog={() => setOpenEditExpenseDialog(false)}
+                              />
+                            </DialogContent>
+                          </DialogContent>
+                        </Dialog>
                         <Button
                           variant="ghost"
                           size="icon"

@@ -13,6 +13,7 @@ import { createContext, ReactNode, useContext, useEffect, useState } from 'react
 
 interface ExpenseContextType {
   expenses: Expense[];
+  expenseByCategory: ExpenseByCategory[];
   refreshExpenses: () => Promise<void>;
   addExpense: (
     amount: number,
@@ -37,17 +38,24 @@ const ExpenseContext = createContext<ExpenseContextType | undefined>(undefined);
 
 export const ExpenseProvider = ({
   children,
-  initialExpenses
+  initialExpenses,
+  initialExpensesByCategory
 }: {
   children: ReactNode;
   initialExpenses: Expense[];
+  initialExpensesByCategory: ExpenseByCategory[];
 }) => {
   const [expenses, setExpenses] = useState<Expense[]>(initialExpenses);
+  const [expenseByCategory, setExpenseByCategory] =
+    useState<ExpenseByCategory[]>(initialExpensesByCategory);
 
   const refreshExpenses = async () => {
     try {
-      const data = await getExpensesAction();
-      setExpenses(data);
+      const _expenses = await getExpensesAction();
+      setExpenses(_expenses);
+
+      const _expensesByCategory = await getCategoryExpensesAction();
+      setExpenseByCategory(_expensesByCategory);
     } catch (error) {
       console.error('Failed to load expenses:', error);
     }
@@ -110,6 +118,7 @@ export const ExpenseProvider = ({
     <ExpenseContext.Provider
       value={{
         expenses,
+        expenseByCategory,
         refreshExpenses,
         addExpense,
         updateExpense,

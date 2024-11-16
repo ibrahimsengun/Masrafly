@@ -35,7 +35,7 @@ const expenseSchema = z.object({
   amount: z.number().positive('Amount must be a positive number'),
   description: z.string().optional(),
   date: z.date({
-    required_error: 'A date of birth is required.'
+    required_error: 'Date is required'
   }),
   categoryId: z.string().optional(),
   sourceId: z.string().optional()

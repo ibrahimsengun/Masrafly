@@ -96,19 +96,7 @@ export const updateExpenseAction = async (
     .from('expenses')
     .update(updates)
     .eq('id', expenseId)
-    .eq('user_id', user.id)
-    .select(
-      `
-      id,
-      amount,
-      description,
-      date,
-      created_at,
-      category: categories ( name, color ),
-      source: sources ( name, balance )
-    `
-    )
-    .single();
+    .eq('user_id', user.id);
 
   if (error) {
     throw new Error(error.message);

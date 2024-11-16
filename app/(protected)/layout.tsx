@@ -1,5 +1,5 @@
 import { getCategoriesAction } from '@/actions/category-actions';
-import { getExpensesAction } from '@/actions/expense-actions';
+import { getCategoryExpensesAction, getExpensesAction } from '@/actions/expense-actions';
 import { getSourcesAction } from '@/actions/source-actions';
 import { CategoryProvider } from '@/context/category-context';
 import { ExpenseProvider } from '@/context/expense-context';
@@ -20,10 +20,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const sources = await getSourcesAction();
   const categories = await getCategoriesAction();
   const expenses = await getExpensesAction();
+  const expensesByCategory = await getCategoryExpensesAction();
   return (
     <SourceProvider initialSources={sources}>
       <CategoryProvider initialCategories={categories}>
-        <ExpenseProvider initialExpenses={expenses}>{children}</ExpenseProvider>
+        <ExpenseProvider initialExpenses={expenses} initialExpensesByCategory={expensesByCategory}>
+          {children}
+        </ExpenseProvider>
       </CategoryProvider>
     </SourceProvider>
   );
