@@ -23,8 +23,8 @@ export const getExpensesAction = async (): Promise<Expense[]> => {
       description,
       date,
       created_at,
-      category: categories ( name, color ),
-      source: sources ( name, balance )
+      category: categories ( id, name, color ),
+      source: sources ( id, name, balance )
     `
     )
     .eq('user_id', user.id)
@@ -52,28 +52,14 @@ export const addExpenseAction = async (
     throw new Error('User not authenticated');
   }
 
-  const { data, error } = await supabase
-    .from('expenses')
-    .insert({
-      user_id: user.id,
-      amount,
-      description,
-      date,
-      category_id: categoryId,
-      source_id: sourceId
-    })
-    .select(
-      `
-      id,
-      amount,
-      description,
-      date,
-      created_at,
-      category: categories ( name, color ),
-      source: sources ( name, balance )
-    `
-    )
-    .single();
+  const { data, error } = await supabase.from('expenses').insert({
+    user_id: user.id,
+    amount,
+    description,
+    date,
+    category_id: categoryId,
+    source_id: sourceId
+  });
 
   if (error) {
     throw new Error(error.message);
@@ -150,3 +136,16 @@ export const deleteExpenseAction = async (expenseId: string): Promise<void> => {
     throw new Error(error.message);
   }
 };
+
+export async function getCategoryExpensesAction() {
+  const supabase = await createClient();
+  const user = await getUserAction();
+  const { data, error } = await supabase.rpc('get_category_expenses', { p_user_id: user.id });
+
+  if (error) {
+    console.error('Error fetching category expenses:', error.message);
+    throw new Error(error.message);
+  }
+
+  return data;
+}

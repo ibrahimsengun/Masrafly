@@ -3,6 +3,7 @@
 import { useSource } from '@/context/source-context';
 import { Trash } from 'lucide-react';
 import { AddSourceButton } from './add-source-button';
+import PriceFormatter from './price-formatter';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import {
@@ -42,7 +43,9 @@ export const SourceTable = () => {
               return (
                 <TableRow key={source.id}>
                   <TableCell className="font-medium">{source.name}</TableCell>
-                  <TableCell>{source.balance.toLocaleString()}</TableCell>
+                  <TableCell>
+                    <PriceFormatter price={source.balance} />
+                  </TableCell>
                   <TableCell>{new Date(source.created_at).toLocaleDateString()}</TableCell>
                   <TableCell>
                     <div className="flex space-x-2">

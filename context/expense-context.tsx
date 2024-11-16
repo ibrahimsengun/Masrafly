@@ -4,10 +4,11 @@
 import {
   addExpenseAction,
   deleteExpenseAction,
+  getCategoryExpensesAction,
   getExpensesAction,
   updateExpenseAction
 } from '@/actions/expense-actions';
-import { Expense } from '@/types/expense';
+import { Expense, ExpenseByCategory } from '@/types/expense';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
 interface ExpenseContextType {
@@ -29,6 +30,7 @@ interface ExpenseContextType {
     sourceId?: string | null
   ) => Promise<void>;
   deleteExpense: (expenseId: string) => Promise<void>;
+  getCategoryExpenses: () => Promise<ExpenseByCategory[] | undefined>;
 }
 
 const ExpenseContext = createContext<ExpenseContextType | undefined>(undefined);
@@ -59,8 +61,8 @@ export const ExpenseProvider = ({
     sourceId: string | null
   ) => {
     try {
-      const newExpense = await addExpenseAction(amount, description, date, categoryId, sourceId);
-      setExpenses((prev) => [newExpense, ...prev]);
+      await addExpenseAction(amount, description, date, categoryId, sourceId);
+      refreshExpenses();
     } catch (error) {
       console.error('Failed to add expense:', error);
     }
@@ -75,17 +77,8 @@ export const ExpenseProvider = ({
     sourceId?: string | null
   ) => {
     try {
-      const updatedExpense = await updateExpenseAction(
-        expenseId,
-        amount,
-        description,
-        date,
-        categoryId,
-        sourceId
-      );
-      setExpenses((prev) =>
-        prev.map((expense) => (expense.id === expenseId ? updatedExpense : expense))
-      );
+      await updateExpenseAction(expenseId, amount, description, date, categoryId, sourceId);
+      refreshExpenses();
     } catch (error) {
       console.error('Failed to update expense:', error);
     }
@@ -94,9 +87,18 @@ export const ExpenseProvider = ({
   const deleteExpense = async (expenseId: string) => {
     try {
       await deleteExpenseAction(expenseId);
-      setExpenses((prev) => prev.filter((expense) => expense.id !== expenseId));
+      refreshExpenses();
     } catch (error) {
       console.error('Failed to delete expense:', error);
+    }
+  };
+
+  const getCategoryExpenses = async () => {
+    try {
+      const data: ExpenseByCategory[] = await getCategoryExpensesAction();
+      return data;
+    } catch (error) {
+      console.error('Failed to load category expenses:', error);
     }
   };
 
@@ -106,7 +108,14 @@ export const ExpenseProvider = ({
 
   return (
     <ExpenseContext.Provider
-      value={{ expenses, refreshExpenses, addExpense, updateExpense, deleteExpense }}
+      value={{
+        expenses,
+        refreshExpenses,
+        addExpense,
+        updateExpense,
+        deleteExpense,
+        getCategoryExpenses
+      }}
     >
       {children}
     </ExpenseContext.Provider>

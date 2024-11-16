@@ -4,13 +4,25 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useExpense } from '@/context/expense-context';
+import ExpenseForm from '@/forms/expense-form';
 import { Expense } from '@/types/expense';
 import { format } from 'date-fns';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Edit, PlusCircle, Trash2 } from 'lucide-react';
+import { useState } from 'react';
+import PriceFormatter from './price-formatter';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from './ui/dialog';
 
 export default function ExpenseList() {
   const { expenses, deleteExpense } = useExpense();
+  const [openDialog, setOpenDialog] = useState(false);
 
   const handleDelete = (id: string) => {
     deleteExpense(id);
@@ -38,9 +50,22 @@ export default function ExpenseList() {
       <CardContent className="flex flex-col gap-6 p-6">
         <div className="flex justify-between">
           <h1 className="text-2xl font-semibold leading-none tracking-tight">Latest Activites</h1>
-          <Button>
-            <PlusCircle className="mr-2 h-4 w-4" /> Add New Expense
-          </Button>
+          <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+            <DialogTrigger asChild>
+              <Button>
+                <PlusCircle className="mr-2 h-4 w-4" /> Add New Expense
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Add New Expense</DialogTitle>
+                <DialogClose />
+              </DialogHeader>
+              <DialogContent>
+                <ExpenseForm closeDialog={() => setOpenDialog(false)} />
+              </DialogContent>
+            </DialogContent>
+          </Dialog>
         </div>
         <ScrollArea className="h-[calc(80vh-200px)]">
           <AnimatePresence>
@@ -63,7 +88,9 @@ export default function ExpenseList() {
                           />
                           <span className="text-sm font-medium">{expense.category?.name}</span>
                         </div>
-                        <h3 className="text-lg font-bold">${expense.amount.toFixed(2)}</h3>
+                        <h3 className="text-lg font-bold">
+                          <PriceFormatter price={expense.amount} />
+                        </h3>
                         <p className="text-sm text-muted-foreground">{expense.description}</p>
                       </div>
                       <div className="text-right">
