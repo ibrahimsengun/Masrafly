@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useExpense } from '@/context/expense-context';
 import ExpenseForm from '@/forms/expense-form';
+import { useMediaQuery } from '@/hooks/use-media-query';
 import { Expense } from '@/types/expense';
 import { format } from 'date-fns';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -25,36 +26,22 @@ export default function ExpenseList() {
   const [openAddExpenseDialog, setOpenAddExpenseDialog] = useState(false);
   const [openEditExpenseDialog, setOpenEditExpenseDialog] = useState(false);
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
+  const isMobile = useMediaQuery('min-width: 768px');
 
   const handleDelete = (id: string) => {
     deleteExpense(id);
   };
 
-  if (expenses.length === 0) {
-    return (
-      <div className="text-center py-12">
-        <h3 className="text-2xl font-semibold mb-4">No expenses yet</h3>
-        <p className="text-muted-foreground mb-6">
-          Start tracking your expenses by adding your first one!
-        </p>
-        <img
-          src="/placeholder.svg?height=200&width=200"
-          alt="No expenses"
-          className="mx-auto mb-6"
-        />
-        <Button>Add Your First Expense</Button>
-      </div>
-    );
-  }
-
   return (
     <Card>
       <CardContent className="flex flex-col gap-6 p-6">
         <div className="flex justify-between">
-          <h1 className="text-2xl font-semibold leading-none tracking-tight">Latest Activites</h1>
+          <h1 className="text-lg md:text-2xl font-semibold leading-none tracking-tight">
+            Latest Activites
+          </h1>
           <Dialog open={openAddExpenseDialog} onOpenChange={setOpenAddExpenseDialog}>
             <DialogTrigger asChild>
-              <Button>
+              <Button size={isMobile ? 'sm' : 'default'}>
                 <PlusCircle className="mr-2 h-4 w-4" /> Add New Expense
               </Button>
             </DialogTrigger>
@@ -69,6 +56,14 @@ export default function ExpenseList() {
             </DialogContent>
           </Dialog>
         </div>
+        {expenses.length == 0 && (
+          <div className="text-center py-12">
+            <h3 className="text-lg md:text-2xl font-semibold mb-4">No expenses yet</h3>
+            <p className="text-muted-foreground mb-6">
+              Start tracking your expenses by adding your first one!
+            </p>
+          </div>
+        )}
         <ScrollArea className="h-[calc(80vh-200px)]">
           <AnimatePresence>
             {expenses.map((expense: Expense) => (

@@ -18,3 +18,5 @@ export function useMediaQuery(query: string) {
 
   return value;
 }
+
+// const isMobile = useMediaQuery('min-width: 768px');

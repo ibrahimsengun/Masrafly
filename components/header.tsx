@@ -1,11 +1,14 @@
 'use client';
 
-import { signOutAction } from '@/actions/auth-actions';
 import { User } from '@supabase/supabase-js';
+import { AlignJustify, ChartNoAxesGantt, Rainbow, Wallet } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import React from 'react';
 import AuthButton from './auth-button';
 import { Button } from './ui/button';
+import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from './ui/drawer';
+import { Separator } from './ui/separator';
 
 export const Header = ({ user }: { user: User | null }) => {
   const pathname = usePathname();
@@ -15,14 +18,52 @@ export const Header = ({ user }: { user: User | null }) => {
   const isLoggedIn = !!user;
   const protectedLinks = isLoggedIn
     ? [
-        { url: '/dashboard', label: 'Dashboard' },
-        { url: '/sources', label: 'Sources' },
-        { url: '/categories', label: 'Categories' }
+        { url: '/dashboard', label: 'Dashboard', icon: <ChartNoAxesGantt /> },
+        { url: '/sources', label: 'Sources', icon: <Wallet /> },
+        { url: '/categories', label: 'Categories', icon: <Rainbow /> }
       ]
     : [];
+  const MobileHeader = () => {
+    return (
+      <div className="md:hidden container mx-auto flex flex-row justify-between">
+        <Drawer>
+          <DrawerTrigger asChild>
+            <Button variant="outline">
+              <AlignJustify />
+            </Button>
+          </DrawerTrigger>
+          <DrawerContent className="w-[200px]">
+            <DrawerTitle className="hidden">Menu</DrawerTitle>
+            <div className="flex flex-col gap-2">
+              <h1 className="text-lg px-4 pt-4 pb-2">finance-track</h1>
+              <Separator />
+              {protectedLinks.map((link) => (
+                <React.Fragment key={link.url}>
+                  <Link href={link.url} className="flex flex-row gap-4 items-center px-4 ">
+                    {link.icon} {link.label}
+                  </Link>
+                  <Separator />
+                </React.Fragment>
+              ))}
+            </div>
+          </DrawerContent>
+        </Drawer>
+        <div className="flex flex-row gap-2 items-center justify-end">
+          {isLoggedIn ? (
+            <AuthButton user={user} />
+          ) : (
+            <Button>
+              <Link href="/sign-in">Sign In</Link>
+            </Button>
+          )}
+        </div>
+      </div>
+    );
+  };
   return (
-    <header className="border-b py-4 h-[80px] mb-8">
-      <div className="flex flex-row justify-between items-center container mx-auto ">
+    <header className="border-b py-2 h-[60px] md:h-[80px] mb-8 flex items-center">
+      <MobileHeader />
+      <div className="hidden md:flex flex-row justify-between items-center container mx-auto">
         <div className="flex flex-row items-center gap-4">
           <h1 className="border-r pr-6">finance-track</h1>
           <div className="flex flex-row items-center gap-1">
@@ -35,14 +76,7 @@ export const Header = ({ user }: { user: User | null }) => {
         </div>
         <div className="flex flex-row gap-2 items-center">
           {isLoggedIn ? (
-            <>
-              <AuthButton user={user} />
-              <form>
-                <Button variant="outline" formAction={signOutAction}>
-                  Sign Out
-                </Button>
-              </form>
-            </>
+            <AuthButton user={user} />
           ) : (
             <Button>
               <Link href="/sign-in">Sign In</Link>

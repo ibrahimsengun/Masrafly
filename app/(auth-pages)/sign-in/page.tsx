@@ -8,7 +8,9 @@ export default function SignIn() {
     <div className="w-full min-h-screen flex flex-col justify-center items-center">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-semibold mb-2">Welcome to FinanceTrack</CardTitle>
+          <CardTitle className="text-lg md:text-2xl font-semibold mb-2">
+            Welcome to FinanceTrack
+          </CardTitle>
           <p className="text-muted-foreground">Manage your finances with ease</p>
         </CardHeader>
         <CardContent className="flex justify-center">

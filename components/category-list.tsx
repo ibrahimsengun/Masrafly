@@ -28,7 +28,7 @@ export default function CategoryList() {
     <div className="min-h-[70vh] w-full">
       <Card className="mx-auto">
         <CardHeader className="flex flex-row justify-between pt-6">
-          <CardTitle className="text-2xl font-semibold leading-none tracking-tight">
+          <CardTitle className="text-lg md:text-2xl font-semibold leading-none tracking-tight">
             Manage Categories
           </CardTitle>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -66,9 +66,9 @@ export default function CategoryList() {
               <Button onClick={() => setIsDialogOpen(true)}>Create Your First Category</Button>
             </div>
           ) : (
-            <ScrollArea className="h-[calc(70vh-250px)] pr-4">
+            <ScrollArea className="h-[50vh] md:h-[calc(70vh-250px)] pr-4">
               <AnimatePresence>
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {categories.map((category) => (
                     <motion.div
                       key={category.id}
