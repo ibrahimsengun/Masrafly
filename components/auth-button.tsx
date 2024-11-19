@@ -13,6 +13,7 @@ import {
 } from './ui/dropdown-menu';
 
 export default function AuthButton({ user }: { user: User }) {
+  const showedName = user?.user_metadata?.full_name ?? user.email;
   const avatarUrl = user?.user_metadata?.avatar_url;
   return (
     <DropdownMenu>
@@ -23,7 +24,7 @@ export default function AuthButton({ user }: { user: User }) {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
+        <DropdownMenuLabel>{showedName}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem className="flex flex-row gap-2 items-center">

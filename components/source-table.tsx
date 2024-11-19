@@ -1,6 +1,7 @@
 'use client';
 
 import { useSource } from '@/context/source-context';
+import { format } from 'date-fns';
 import { Trash } from 'lucide-react';
 import { AddSourceButton } from './add-source-button';
 import PriceFormatter from './price-formatter';
@@ -46,7 +47,7 @@ export const SourceTable = () => {
                   <TableCell>
                     <PriceFormatter price={source.balance} />
                   </TableCell>
-                  <TableCell>{new Date(source.created_at).toLocaleDateString()}</TableCell>
+                  <TableCell>{format(source.created_at, 'PPP')}</TableCell>
                   <TableCell>
                     <div className="flex space-x-2">
                       {/* <Button variant="ghost" size="sm">
