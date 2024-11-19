@@ -37,8 +37,8 @@ const expenseSchema = z.object({
   date: z.date({
     required_error: 'Date is required'
   }),
-  categoryId: z.string().optional(),
-  sourceId: z.string().optional()
+  categoryId: z.string({ required_error: 'Select a category' }),
+  sourceId: z.string({ required_error: 'Select a source' })
 });
 
 type ExpenseFormData = z.infer<typeof expenseSchema>;
@@ -60,8 +60,8 @@ export default function ExpenseForm({
       amount: editingExpense?.amount || 0,
       description: editingExpense?.description || '',
       date: editingExpense?.date ? new Date(editingExpense.date) : new Date(),
-      categoryId: editingExpense?.category?.id || '',
-      sourceId: editingExpense?.source?.id || ''
+      categoryId: editingExpense?.category?.id || undefined,
+      sourceId: editingExpense?.source?.id || undefined
     }
   });
 
