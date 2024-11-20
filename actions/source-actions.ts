@@ -38,15 +38,16 @@ export const getSourcesAction = async (): Promise<Source[]> => {
   return data as Source[];
 };
 
-export const updateSourceBalanceAction = async (
+export const updateSourceAction = async (
   sourceId: string,
+  newName: string,
   newBalance: number
 ): Promise<void> => {
   const supabase = await createClient();
 
   const { error } = await supabase
     .from('sources')
-    .update({ balance: newBalance })
+    .update({ balance: newBalance, name: newName })
     .eq('id', sourceId);
 
   if (error) {

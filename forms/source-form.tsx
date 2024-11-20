@@ -1,11 +1,11 @@
 'use client';
 
-import { addSourceAction } from '@/actions/source-actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useSource } from '@/context/source-context';
 import { useToast } from '@/hooks/use-toast';
+import { Source } from '@/types/source';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -18,9 +18,21 @@ const sourceSchema = z.object({
 
 type SourceFormData = z.infer<typeof sourceSchema>;
 
-export default function AddSourceForm({ closeDialog }: { closeDialog?: () => void }) {
+interface AddSourceFormProps {
+  isEdit?: boolean;
+  editingSource?: Source;
+  closeDialog?: () => void;
+}
+
+export default function SourceForm({
+  isEdit = false,
+  editingSource,
+  closeDialog
+}: AddSourceFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
+
+  const { addSource, updateSource } = useSource();
 
   const { refreshSources } = useSource();
   const { toast } = useToast();
@@ -31,7 +43,8 @@ export default function AddSourceForm({ closeDialog }: { closeDialog?: () => voi
     reset,
     formState: { errors }
   } = useForm<SourceFormData>({
-    resolver: zodResolver(sourceSchema)
+    resolver: zodResolver(sourceSchema),
+    defaultValues: editingSource || { name: '', balance: 0 }
   });
 
   const onSubmit = async (data: SourceFormData) => {
@@ -39,20 +52,31 @@ export default function AddSourceForm({ closeDialog }: { closeDialog?: () => voi
     setSuccess(false);
 
     try {
-      await addSourceAction(data.name, data.balance);
+      if (isEdit && editingSource) {
+        // Kaynak düzenleme işlemi
+        await updateSource(editingSource.id, data.name, data.balance);
+        toast({
+          title: 'Source updated successfully!',
+          description: 'Your source has been updated.'
+        });
+      } else {
+        // Yeni kaynak ekleme işlemi
+        await addSource(data.name, data.balance);
+        toast({
+          title: 'Source added successfully!',
+          description: 'Your source has been added to your account.'
+        });
+      }
+
       reset();
       setSuccess(true);
-      toast({
-        title: 'Source added successfully!',
-        description: 'Your source has been added to your account.'
-      });
       refreshSources();
       if (closeDialog) closeDialog();
     } catch (err: any) {
-      setError(err.message || 'Failed to add source');
+      setError(err.message || 'Failed to process the request');
       toast({
-        title: 'Failed to add source',
-        description: err.message || 'An error occurred while adding your source.'
+        title: `Failed to ${isEdit ? 'update' : 'add'} source`,
+        description: err.message || 'An error occurred.'
       });
     }
   };
@@ -85,10 +109,14 @@ export default function AddSourceForm({ closeDialog }: { closeDialog?: () => voi
         {errors.balance && <p className="mt-1 text-sm text-red-600">{errors.balance.message}</p>}
       </div>
 
-      <Button type="submit">Add Source</Button>
+      <Button type="submit">{isEdit ? 'Update Source' : 'Add Source'}</Button>
 
       {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
-      {success && <p className="mt-2 text-sm text-green-600">Source added successfully!</p>}
+      {success && (
+        <p className="mt-2 text-sm text-green-600">
+          {isEdit ? 'Source updated successfully!' : 'Source added successfully!'}
+        </p>
+      )}
     </form>
   );
 }

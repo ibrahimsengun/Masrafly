@@ -1,8 +1,11 @@
 'use client';
 
 import { useSource } from '@/context/source-context';
+import SourceForm from '@/forms/source-form';
+import { Source } from '@/types/source';
 import { format } from 'date-fns';
-import { Trash } from 'lucide-react';
+import { Edit, Trash } from 'lucide-react';
+import { useState } from 'react';
 import { AddSourceButton } from './add-source-button';
 import PriceFormatter from './price-formatter';
 import { Button } from './ui/button';
@@ -21,6 +24,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 
 export const SourceTable = () => {
   const { sources, deleteSource } = useSource();
+  const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
+  const [editingSource, setEditingSource] = useState<Source>();
   return (
     <Card className="w-full">
       <CardHeader>
@@ -50,9 +55,25 @@ export const SourceTable = () => {
                   <TableCell>{format(source.created_at, 'PPP')}</TableCell>
                   <TableCell>
                     <div className="flex space-x-2">
-                      {/* <Button variant="ghost" size="sm">
-                        <Edit className="h-4 w-4" />
-                      </Button> */}
+                      <Dialog open={openUpdateDialog} onOpenChange={setOpenUpdateDialog}>
+                        <DialogTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setEditingSource(source)}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogTitle>Update Source</DialogTitle>
+                          <SourceForm
+                            isEdit
+                            editingSource={editingSource}
+                            closeDialog={() => setOpenUpdateDialog(false)}
+                          />
+                        </DialogContent>
+                      </Dialog>
                       <Dialog>
                         <DialogTrigger asChild>
                           <Button variant="ghost" size="sm">

@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import AddSourceForm from '@/forms/add-source-form';
+import SourceForm from '@/forms/source-form';
 import { PlusCircle } from 'lucide-react';
 import { useState } from 'react';
 import {
@@ -28,7 +28,7 @@ export const AddSourceButton = () => {
             <DialogTitle>Add Source</DialogTitle>
             <DialogDescription>For your expenses</DialogDescription>
           </DialogHeader>
-          <AddSourceForm closeDialog={() => setOpen(false)} />
+          <SourceForm closeDialog={() => setOpen(false)} />
         </DialogContent>
       </Dialog>
     </>
