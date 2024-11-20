@@ -10,6 +10,7 @@ import {
 } from '@/actions/expense-actions';
 import { Expense, ExpenseByCategory } from '@/types/expense';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { useSource } from './source-context';
 
 interface ExpenseContextType {
   expenses: Expense[];
@@ -48,14 +49,16 @@ export const ExpenseProvider = ({
   const [expenses, setExpenses] = useState<Expense[]>(initialExpenses);
   const [expenseByCategory, setExpenseByCategory] =
     useState<ExpenseByCategory[]>(initialExpensesByCategory);
+  const { refreshSources } = useSource();
 
-  const refreshExpenses = async () => {
+  const refreshExpenses = async (method: 'add' | 'delete' | 'update' | 'empty' = 'empty') => {
     try {
       const _expenses = await getExpensesAction();
       setExpenses(_expenses);
 
       const _expensesByCategory = await getCategoryExpensesAction();
       setExpenseByCategory(_expensesByCategory);
+      if (['add', 'update', 'delete'].includes(method)) refreshSources();
     } catch (error) {
       console.error('Failed to load expenses:', error);
     }
@@ -70,7 +73,7 @@ export const ExpenseProvider = ({
   ) => {
     try {
       await addExpenseAction(amount, description, date, categoryId, sourceId);
-      refreshExpenses();
+      refreshExpenses('add');
     } catch (error) {
       console.error('Failed to add expense:', error);
     }
@@ -86,7 +89,7 @@ export const ExpenseProvider = ({
   ) => {
     try {
       await updateExpenseAction(expenseId, amount, description, date, categoryId, sourceId);
-      refreshExpenses();
+      refreshExpenses('update');
     } catch (error) {
       console.error('Failed to update expense:', error);
     }
@@ -95,7 +98,7 @@ export const ExpenseProvider = ({
   const deleteExpense = async (expenseId: string) => {
     try {
       await deleteExpenseAction(expenseId);
-      refreshExpenses();
+      refreshExpenses('delete');
     } catch (error) {
       console.error('Failed to delete expense:', error);
     }

@@ -32,7 +32,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           disableTransitionOnChange
         >
           <Header user={user} />
-          <main className="flex flex-col justify-start items-start min-h-[calc(100vh-140px)] container mx-auto">
+          <main className="flex flex-col justify-start items-start min-h-[calc(100vh-210px)] container mx-auto">
             {children}
           </main>
           <Footer />

@@ -64,7 +64,7 @@ export default function ExpenseList() {
             </p>
           </div>
         )}
-        <ScrollArea className="h-[calc(80vh-200px)]">
+        <ScrollArea className="h-[calc(80vh-180px)]">
           <AnimatePresence>
             {expenses.map((expense: Expense) => (
               <motion.div
@@ -76,7 +76,7 @@ export default function ExpenseList() {
               >
                 <Card className="mb-4 overflow-hidden">
                   <CardContent className="p-0">
-                    <div className="flex items-center p-4 hover:bg-muted/50 transition-colors">
+                    <div className="flex items-center p-3 hover:bg-muted/50 transition-colors">
                       <div className="flex-1 mr-4">
                         <div className="flex items-center mb-1">
                           <div
@@ -88,8 +88,11 @@ export default function ExpenseList() {
                         <h3 className="text-lg font-bold">
                           <PriceFormatter price={expense.amount} />
                         </h3>
-                        <p className="text-sm text-muted-foreground">{expense.description}</p>
+                        <p className="text-sm text-muted-foreground mr-4 self-center">
+                          {expense.description}
+                        </p>
                       </div>
+
                       <div className="text-right">
                         <p className="text-sm font-medium">{expense.source?.name}</p>
                         <p className="text-sm text-muted-foreground">
