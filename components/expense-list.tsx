@@ -64,7 +64,7 @@ export default function ExpenseList() {
             </p>
           </div>
         )}
-        <ScrollArea className="h-[calc(80vh-180px)]">
+        <ScrollArea className="h-[calc(60vh-180px)]">
           <AnimatePresence>
             {expenses.map((expense: Expense) => (
               <motion.div

@@ -1,12 +1,10 @@
-// actions/expense-actions.ts
 'use server';
 
 import { getUserAction } from '@/actions/auth-actions';
 import { Expense } from '@/types/expense';
 import { createClient } from '@/utils/supabase/server';
 
-// Harcamaları listeleme (Tüm bilgileriyle birlikte)
-export const getExpensesAction = async (): Promise<Expense[]> => {
+export const getExpensesAction = async (month?: number, year?: number): Promise<Expense[]> => {
   const supabase = await createClient();
   const user = await getUserAction();
 
@@ -14,21 +12,36 @@ export const getExpensesAction = async (): Promise<Expense[]> => {
     throw new Error('User not authenticated');
   }
 
-  const { data, error } = await supabase
+  const query = supabase
     .from('expenses')
     .select(
       `
-      id,
-      amount,
-      description,
-      date,
-      created_at,
-      category: categories ( id, name, color ),
-      source: sources ( id, name, balance )
-    `
+		id,
+		amount,
+		description,
+		date,
+		created_at,
+		category: categories ( id, name, color ),
+		source: sources ( id, name, balance )
+	  `
     )
     .eq('user_id', user.id)
     .order('date', { ascending: false });
+
+  if (month && year) {
+    query
+      .gte('date', `${year}-${month.toString().padStart(2, '0')}-01`)
+      .lt('date', `${year}-${(month + 1).toString().padStart(2, '0')}-01`);
+  } else if (month) {
+    const currentYear = new Date().getFullYear();
+    query
+      .gte('date', `${currentYear}-${month.toString().padStart(2, '0')}-01`)
+      .lt('date', `${currentYear}-${(month + 1).toString().padStart(2, '0')}-01`);
+  } else if (year) {
+    query.gte('date', `${year}-01-01`).lt('date', `${year + 1}-01-01`);
+  }
+
+  const { data, error } = await query;
 
   if (error) {
     throw new Error(error.message);
@@ -37,7 +50,6 @@ export const getExpensesAction = async (): Promise<Expense[]> => {
   return data as unknown as Expense[];
 };
 
-// Yeni harcama ekleme
 export const addExpenseAction = async (
   amount: number,
   description: string | null,
@@ -68,7 +80,6 @@ export const addExpenseAction = async (
   return data as unknown as Expense;
 };
 
-// Belirli bir harcamayı güncelleme
 export const updateExpenseAction = async (
   expenseId: string,
   amount?: number,
@@ -105,7 +116,6 @@ export const updateExpenseAction = async (
   return data as unknown as Expense;
 };
 
-// Belirli bir harcamayı silme
 export const deleteExpenseAction = async (expenseId: string): Promise<void> => {
   const supabase = await createClient();
   const user = await getUserAction();
