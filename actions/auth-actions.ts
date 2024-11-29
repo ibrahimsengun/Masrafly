@@ -28,7 +28,7 @@ export const signInWithGoogleAction = async () => {
       redirectTo: `${origin}/auth/callback`
     }
   });
-  console.log({ data });
+
   if (error) {
     return encodedRedirect('error', '/sign-in', error.message);
   }
@@ -40,7 +40,7 @@ export const signInWithGoogleAction = async () => {
 export const signOutAction = async () => {
   const supabase = await createClient();
   await supabase.auth.signOut();
-  return redirect('/sign-in');
+  return redirect('/');
 };
 
 // not use right now but maybe?

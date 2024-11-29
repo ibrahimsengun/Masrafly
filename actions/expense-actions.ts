@@ -5,7 +5,6 @@ import { Expense } from '@/types/expense';
 import { createClient } from '@/utils/supabase/server';
 
 export const getExpensesAction = async (month?: number, year?: number): Promise<Expense[]> => {
-  console.log({ a: 'a', month, year });
   const supabase = await createClient();
   const user = await getUserAction();
 
