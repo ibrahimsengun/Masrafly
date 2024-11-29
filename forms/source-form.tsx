@@ -98,7 +98,7 @@ export default function SourceForm({
 
       <div>
         <Label htmlFor="balance" className="block text-sm font-medium text-gray-700">
-          Initial Balance
+          Balance
         </Label>
         <Input
           type="number"

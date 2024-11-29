@@ -15,6 +15,7 @@ import { useSource } from './source-context';
 interface ExpenseContextType {
   expenses: Expense[];
   expenseByCategory: ExpenseByCategory[];
+  isLoading: boolean;
   refreshExpenses: () => Promise<void>;
   addExpense: (
     amount: number,
@@ -40,20 +41,34 @@ const ExpenseContext = createContext<ExpenseContextType | undefined>(undefined);
 export const ExpenseProvider = ({
   children,
   initialExpenses,
-  initialExpensesByCategory
+  initialExpensesByCategory,
+  date
 }: {
   children: ReactNode;
   initialExpenses: Expense[];
   initialExpensesByCategory: ExpenseByCategory[];
+  date: { month: number; year: number };
 }) => {
   const [expenses, setExpenses] = useState<Expense[]>(initialExpenses);
   const [expenseByCategory, setExpenseByCategory] =
     useState<ExpenseByCategory[]>(initialExpensesByCategory);
   const { refreshSources } = useSource();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (!isLoading && (expenses || initialExpenses)) {
+      setIsLoading(false);
+    }
+  }, [expenses, initialExpenses]);
+
+  useEffect(() => {
+    setExpenses(initialExpenses);
+  }, [initialExpenses]);
 
   const refreshExpenses = async (method: 'add' | 'delete' | 'update' | 'empty' = 'empty') => {
     try {
-      const _expenses = await getExpensesAction();
+      setIsLoading(true);
+      const _expenses = await getExpensesAction(date.month, date.year);
       setExpenses(_expenses);
 
       const _expensesByCategory = await getCategoryExpensesAction();
@@ -61,6 +76,8 @@ export const ExpenseProvider = ({
       if (['add', 'update', 'delete'].includes(method)) refreshSources();
     } catch (error) {
       console.error('Failed to load expenses:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -113,15 +130,12 @@ export const ExpenseProvider = ({
     }
   };
 
-  useEffect(() => {
-    refreshExpenses();
-  }, []);
-
   return (
     <ExpenseContext.Provider
       value={{
         expenses,
         expenseByCategory,
+        isLoading,
         refreshExpenses,
         addExpense,
         updateExpense,

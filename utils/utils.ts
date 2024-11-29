@@ -10,3 +10,21 @@ import { redirect } from 'next/navigation';
 export function encodedRedirect(type: 'error' | 'success', path: string, message: string) {
   return redirect(`${path}?${type}=${encodeURIComponent(message)}`);
 }
+
+export const getMonthName = (month: number) => {
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ];
+  return months[month - 1];
+};

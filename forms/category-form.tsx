@@ -82,7 +82,8 @@ export default function CategoryForm({ isEdit, editingCategory, closeDialog }: C
             id="colorPicker"
             value={color}
             onChange={handleColorChange}
-            className="h-10 w-10 p-0 cursor-pointer"
+            style={{ borderWidth: '0px' }}
+            className="h-10 w-10 p-0 cursor-pointer border-none outline-none"
           />
           <Input
             type="text"

@@ -6,7 +6,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger
@@ -51,11 +50,9 @@ export default function CategoryList() {
                 editingCategory={editingCategory}
                 closeDialog={() => setIsDialogOpen(false)}
               />
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-                  Cancel
-                </Button>
-              </DialogFooter>
+              <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+                Cancel
+              </Button>
             </DialogContent>
           </Dialog>
         </CardHeader>
@@ -66,7 +63,7 @@ export default function CategoryList() {
               <Button onClick={() => setIsDialogOpen(true)}>Create Your First Category</Button>
             </div>
           ) : (
-            <ScrollArea className="h-[50vh] md:h-[calc(70vh-250px)] pr-4">
+            <ScrollArea className="h-[50vh] md:h-[calc(80vh-170px)] pr-4">
               <AnimatePresence>
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {categories.map((category) => (

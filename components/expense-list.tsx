@@ -22,10 +22,12 @@ import {
 } from './ui/dialog';
 
 export default function ExpenseList() {
-  const { expenses, deleteExpense } = useExpense();
+  const { expenses, isLoading, deleteExpense } = useExpense();
+
   const [openAddExpenseDialog, setOpenAddExpenseDialog] = useState(false);
   const [openEditExpenseDialog, setOpenEditExpenseDialog] = useState(false);
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
+
   const isMobile = useMediaQuery('min-width: 768px');
 
   const handleDelete = (id: string) => {
@@ -37,7 +39,7 @@ export default function ExpenseList() {
       <CardContent className="flex flex-col gap-6 p-6">
         <div className="flex justify-between">
           <h1 className="text-lg md:text-2xl font-semibold leading-none tracking-tight">
-            Latest Activites
+            Latest Expenses
           </h1>
           <Dialog open={openAddExpenseDialog} onOpenChange={setOpenAddExpenseDialog}>
             <DialogTrigger asChild>
@@ -56,16 +58,24 @@ export default function ExpenseList() {
             </DialogContent>
           </Dialog>
         </div>
-        {expenses.length == 0 && (
-          <div className="text-center py-12">
-            <h3 className="text-lg md:text-2xl font-semibold mb-4">No expenses yet</h3>
-            <p className="text-muted-foreground mb-6">
-              Start tracking your expenses by adding your first one!
-            </p>
-          </div>
-        )}
-        <ScrollArea className="h-[calc(60vh-180px)]">
+
+        <ScrollArea className="lg:h-[calc(80vh-170px)]">
           <AnimatePresence>
+            {!isLoading && expenses.length == 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div className="text-center py-12">
+                  <h3 className="text-lg md:text-2xl font-semibold mb-4">No expenses yet</h3>
+                  <p className="text-muted-foreground mb-6">
+                    Start tracking your expenses by adding your first one!
+                  </p>
+                </div>
+              </motion.div>
+            )}
             {expenses.map((expense: Expense) => (
               <motion.div
                 key={expense.id}

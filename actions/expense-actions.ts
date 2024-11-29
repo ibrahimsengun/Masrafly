@@ -5,6 +5,7 @@ import { Expense } from '@/types/expense';
 import { createClient } from '@/utils/supabase/server';
 
 export const getExpensesAction = async (month?: number, year?: number): Promise<Expense[]> => {
+  console.log({ a: 'a', month, year });
   const supabase = await createClient();
   const user = await getUserAction();
 
@@ -29,14 +30,20 @@ export const getExpensesAction = async (month?: number, year?: number): Promise<
     .order('date', { ascending: false });
 
   if (month && year) {
+    const nextMonth = month === 12 ? 1 : month + 1;
+    const nextYear = month === 12 ? year + 1 : year;
+
     query
       .gte('date', `${year}-${month.toString().padStart(2, '0')}-01`)
-      .lt('date', `${year}-${(month + 1).toString().padStart(2, '0')}-01`);
+      .lt('date', `${nextYear}-${nextMonth.toString().padStart(2, '0')}-01`);
   } else if (month) {
     const currentYear = new Date().getFullYear();
+    const nextMonth = month === 12 ? 1 : month + 1;
+    const nextYear = month === 12 ? currentYear + 1 : currentYear;
+
     query
       .gte('date', `${currentYear}-${month.toString().padStart(2, '0')}-01`)
-      .lt('date', `${currentYear}-${(month + 1).toString().padStart(2, '0')}-01`);
+      .lt('date', `${nextYear}-${nextMonth.toString().padStart(2, '0')}-01`);
   } else if (year) {
     query.gte('date', `${year}-01-01`).lt('date', `${year + 1}-01-01`);
   }
@@ -49,7 +56,6 @@ export const getExpensesAction = async (month?: number, year?: number): Promise<
 
   return data as unknown as Expense[];
 };
-
 export const addExpenseAction = async (
   amount: number,
   description: string | null,
