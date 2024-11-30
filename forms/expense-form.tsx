@@ -92,7 +92,7 @@ export default function ExpenseForm({
   };
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onFormSubmit)} className="flex flex-col gap-2">
+      <form onSubmit={form.handleSubmit(onFormSubmit)} className="flex flex-col gap-3">
         <FormField
           control={form.control}
           name="amount"
@@ -188,21 +188,21 @@ export default function ExpenseForm({
           control={form.control}
           name="sourceId"
           render={({ field }) => (
-            <FormItem className="space-y-3">
+            <FormItem>
               <FormLabel>Source</FormLabel>
               <FormControl>
                 <RadioGroup
                   onValueChange={field.onChange}
                   defaultValue={field.value}
-                  className="flex flex-row space-y-1"
+                  className="flex flex-row flex-wrap"
                 >
                   {sources.map((source) => (
-                    <FormItem key={source.id} className="flex items-center space-x-3 space-y-0">
+                    <FormItem key={source.id}>
                       <FormControl>
                         <RadioGroupCard value={source.id}>
                           <div className="p-3">
-                            <p className="font-semibold">{source.name}</p>
-                            <PriceFormatter price={source.balance} className="text-sm text-muted" />
+                            <p className="font-semibold text-sm whitespace-nowrap">{source.name}</p>
+                            <PriceFormatter price={source.balance} className="text-xs" />
                           </div>
                         </RadioGroupCard>
                       </FormControl>
