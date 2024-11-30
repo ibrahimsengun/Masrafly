@@ -1,6 +1,8 @@
 'use client';
 
+import { usePreferences } from '@/context/preferences-context';
 import { cn } from '@/lib/utils';
+import { CurrencyCode } from '@/types/preferences';
 
 export default function PriceFormatter({
   price,
@@ -9,10 +11,15 @@ export default function PriceFormatter({
   price: number;
   className?: string;
 }) {
-  const formattedPrice = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: 0
-  }).format(price);
+  const { preferences } = usePreferences();
+  const formattedPrice = new Intl.NumberFormat(
+    CurrencyCode[preferences?.currency as keyof typeof CurrencyCode],
+    {
+      style: 'currency',
+      currency: preferences?.currency,
+      minimumFractionDigits: preferences?.decimal_length,
+      maximumFractionDigits: preferences?.decimal_length
+    }
+  ).format(price);
   return <span className={cn(className)}>{formattedPrice}</span>;
 }

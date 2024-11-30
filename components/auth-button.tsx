@@ -1,6 +1,7 @@
 import { signOutAction } from '@/actions/auth-actions';
 import { User } from '@supabase/supabase-js';
-import { LogOut, Settings, UserIcon } from 'lucide-react';
+import { LogOut, UserIcon } from 'lucide-react';
+import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import {
   DropdownMenu,
@@ -27,13 +28,11 @@ export default function AuthButton({ user }: { user: User }) {
         <DropdownMenuLabel>{showedName}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem className="flex flex-row gap-2 items-center">
-            <UserIcon className="w-4" />
-            <span>Profile</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem className="flex flex-row gap-2 items-center">
-            <Settings className="w-4" />
-            <span>Settings</span>
+          <DropdownMenuItem asChild>
+            <Link href="/preferences" className="flex flex-row gap-2 items-center cursor-pointer">
+              <UserIcon className="w-4" />
+              <span>Preferences</span>
+            </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

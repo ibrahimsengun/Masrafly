@@ -1,5 +1,6 @@
 import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
+import { Toaster } from '@/components/ui/toaster';
 import { createClient } from '@/utils/supabase/server';
 import { GeistSans } from 'geist/font/sans';
 import { ThemeProvider } from 'next-themes';
@@ -36,6 +37,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             {children}
           </main>
           <Footer />
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
