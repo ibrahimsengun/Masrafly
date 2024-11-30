@@ -1,5 +1,6 @@
 'use client';
 
+import PriceFormatter from '@/components/price-formatter';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import {
@@ -12,6 +13,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { RadioGroup, RadioGroupCard } from '@/components/ui/radio-group';
 import {
   Select,
   SelectContent,
@@ -149,7 +151,6 @@ export default function ExpenseForm({
                     mode="single"
                     selected={field.value}
                     onSelect={field.onChange}
-                    disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
                     initialFocus
                   />
                 </PopoverContent>
@@ -187,22 +188,28 @@ export default function ExpenseForm({
           control={form.control}
           name="sourceId"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="space-y-3">
               <FormLabel>Source</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a source" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
+              <FormControl>
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  className="flex flex-row space-y-1"
+                >
                   {sources.map((source) => (
-                    <SelectItem key={source.id} value={source.id}>
-                      {source.name}
-                    </SelectItem>
+                    <FormItem key={source.id} className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupCard value={source.id}>
+                          <div className="p-3">
+                            <p className="font-semibold">{source.name}</p>
+                            <PriceFormatter price={source.balance} className="text-sm text-muted" />
+                          </div>
+                        </RadioGroupCard>
+                      </FormControl>
+                    </FormItem>
                   ))}
-                </SelectContent>
-              </Select>
+                </RadioGroup>
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
