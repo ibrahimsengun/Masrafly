@@ -21,8 +21,9 @@ import { Slider } from '@/components/ui/slider';
 import { usePreferences } from '@/context/preferences-context';
 import { useToast } from '@/hooks/use-toast';
 import { CurrencyCode, Preferences } from '@/types/preferences';
-import { Globe, RotateCcw } from 'lucide-react';
+import { Globe, Hash, RotateCcw, SunMoon } from 'lucide-react';
 import { useState } from 'react';
+import { ThemeSwitcher } from './theme-switcher';
 
 const currencies = [
   { value: 'USD', label: 'US Dollar (USD)', code: 'en-US' },
@@ -80,13 +81,27 @@ export default function PreferencesDashboard() {
           <CardDescription>Customize how financial data is displayed.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="space-y-2">
-            <Label htmlFor="currency" className="flex items-center gap-2">
-              <Globe className="h-4 w-4" />
+          <div className="flex flex-row justify-between">
+            <Label htmlFor="theme" className="flex items-center gap-2 text-lg">
+              <span className="flex justify-center border p-2 rounded-lg">
+                <SunMoon className="h-6 w-6" />
+              </span>
+              Theme
+            </Label>
+            <div>
+              <ThemeSwitcher />
+            </div>
+          </div>
+
+          <div className="flex flex-row justify-between">
+            <Label htmlFor="currency" className="flex items-center gap-2 text-lg">
+              <span className="flex justify-center border p-2 rounded-lg">
+                <Globe className="h-6 w-6" />
+              </span>
               Currency
             </Label>
             <Select value={preferences.currency} onValueChange={handleCurrencyChange}>
-              <SelectTrigger id="currency">
+              <SelectTrigger id="currency" className="w-52">
                 <SelectValue placeholder="Select currency" />
               </SelectTrigger>
               <SelectContent>
@@ -99,9 +114,15 @@ export default function PreferencesDashboard() {
             </Select>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="decimalLength" className="flex items-center gap-2">
-              Decimal Length: {preferences.decimal_length}
+          <div className="flex flex-row justify-between">
+            <Label htmlFor="decimalLength" className="flex items-center gap-2 text-lg">
+              <span className="flex justify-center border p-2 rounded-lg">
+                <Hash className="w-6 h-6" />
+              </span>
+              Decimal Length:
+              <span className="ml-1 text-muted-foreground font-semibold">
+                {preferences.decimal_length}
+              </span>
             </Label>
             <Slider
               id="decimalLength"
@@ -110,10 +131,11 @@ export default function PreferencesDashboard() {
               step={1}
               value={[preferences.decimal_length]}
               onValueChange={handleDecimalLengthChange}
+              className="w-52"
             />
           </div>
 
-          <div className="p-4 bg-muted rounded-lg">
+          <div className="p-4 rounded-lg">
             <h3 className="text-sm font-medium mb-2">Preview</h3>
             <p className="text-2xl font-bold">
               <FormatPreview value={1234567.89} />

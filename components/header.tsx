@@ -57,9 +57,9 @@ export const Header = ({ user }: { user: User | null }) => {
           {isLoggedIn ? (
             <AuthButton user={user} />
           ) : (
-            <Button>
-              <Link href="/sign-in">Sign In</Link>
-            </Button>
+            <Link href="/sign-in">
+              <Button>Sign In</Button>
+            </Link>
           )}
         </div>
       </div>
@@ -85,9 +85,9 @@ export const Header = ({ user }: { user: User | null }) => {
           {isLoggedIn ? (
             <AuthButton user={user} />
           ) : (
-            <Button>
-              <Link href="/sign-in">Sign In</Link>
-            </Button>
+            <Link href="/sign-in">
+              <Button>Sign In</Button>
+            </Link>
           )}
         </div>
       </div>
