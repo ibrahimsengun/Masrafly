@@ -56,14 +56,12 @@ export const ExpenseProvider = ({
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!isLoading && (expenses || initialExpenses)) {
-      setIsLoading(false);
-    }
-  }, [expenses, initialExpenses]);
-
-  useEffect(() => {
     setExpenses(initialExpenses);
   }, [initialExpenses]);
+
+  useEffect(() => {
+    setExpenseByCategory(initialExpensesByCategory);
+  }, [initialExpensesByCategory]);
 
   const refreshExpenses = async (method: 'add' | 'delete' | 'update' | 'empty' = 'empty') => {
     try {
@@ -71,7 +69,7 @@ export const ExpenseProvider = ({
       const _expenses = await getExpensesAction(date.month, date.year);
       setExpenses(_expenses);
 
-      const _expensesByCategory = await getCategoryExpensesAction();
+      const _expensesByCategory = await getCategoryExpensesAction(date.month, date.year);
       setExpenseByCategory(_expensesByCategory);
       if (['add', 'update', 'delete'].includes(method)) refreshSources();
     } catch (error) {

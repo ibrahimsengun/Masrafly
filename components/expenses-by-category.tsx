@@ -15,6 +15,16 @@ export default function ExpensesByCategory() {
       <CardContent>
         <AnimatePresence>
           <div className="flex flex-col gap-2">
+            {expenseByCategory.length == 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div className="text-muted-foreground">There is no data</div>
+              </motion.div>
+            )}
             {expenseByCategory?.map((category) => (
               <motion.div
                 key={category.category_name}
@@ -32,7 +42,7 @@ export default function ExpensesByCategory() {
                     <span>{category.category_name}</span>
                   </div>
                   <span>
-                    <PriceFormatter price={category.total_amount} />
+                    <PriceFormatter price={category.total_expense} />
                   </span>
                 </div>
               </motion.div>

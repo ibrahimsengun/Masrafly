@@ -10,7 +10,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Se
   const year = params.year ? parseInt(params.year) : new Date().getFullYear();
 
   const expenses = await getExpensesAction(month, year);
-  const expensesByCategory = await getCategoryExpensesAction();
+  const expensesByCategory = await getCategoryExpensesAction(month, year);
 
   return (
     <ExpenseProvider

@@ -140,10 +140,27 @@ export const deleteExpenseAction = async (expenseId: string): Promise<void> => {
   }
 };
 
-export async function getCategoryExpensesAction() {
+export async function getCategoryExpensesAction(month?: number, year?: number) {
   const supabase = await createClient();
   const user = await getUserAction();
-  const { data, error } = await supabase.rpc('get_category_expenses', { p_user_id: user.id });
+
+  if (!user) {
+    throw new Error('User not authenticated');
+  }
+
+  const queryParams: { p_user_id: string; p_month?: number; p_year?: number } = {
+    p_user_id: user.id
+  };
+
+  if (month) {
+    queryParams.p_month = month;
+  }
+
+  if (year) {
+    queryParams.p_year = year;
+  }
+
+  const { data, error } = await supabase.rpc('get_category_expenses', queryParams);
 
   if (error) {
     console.error('Error fetching category expenses:', error.message);

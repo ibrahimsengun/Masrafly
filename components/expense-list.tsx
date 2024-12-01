@@ -16,13 +16,14 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger
 } from './ui/dialog';
 
 export default function ExpenseList() {
-  const { expenses, isLoading, deleteExpense } = useExpense();
+  const { expenses, deleteExpense } = useExpense();
 
   const [openAddExpenseDialog, setOpenAddExpenseDialog] = useState(false);
   const [openEditExpenseDialog, setOpenEditExpenseDialog] = useState(false);
@@ -61,7 +62,7 @@ export default function ExpenseList() {
 
         <ScrollArea className="lg:h-[calc(80vh-170px)]">
           <AnimatePresence>
-            {!isLoading && expenses.length == 0 && (
+            {expenses.length == 0 && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -138,13 +139,27 @@ export default function ExpenseList() {
                             </DialogContent>
                           </DialogContent>
                         </Dialog>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleDelete(expense.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button variant="ghost" size="icon">
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </DialogTrigger>
+
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle>Are you sure?</DialogTitle>
+                            </DialogHeader>
+                            <DialogFooter>
+                              <DialogClose asChild>
+                                <Button variant="outline">No</Button>
+                              </DialogClose>
+                              <Button variant="default" onClick={() => deleteExpense(expense.id)}>
+                                Yes
+                              </Button>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
                       </div>
                     </div>
                   </CardContent>

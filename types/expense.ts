@@ -12,5 +12,5 @@ export interface Expense {
 export interface ExpenseByCategory {
   category_name: string;
   category_color: string;
-  total_amount: number;
+  total_expense: number;
 }
