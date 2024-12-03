@@ -72,7 +72,9 @@ export default function ExpenseForm({
   const { sources } = useSource();
   const { addExpense, updateExpense } = useExpense();
   const { toast } = useToast();
+
   const [openCalendar, setOpenCalendar] = useState(false);
+  const [openCategorySelect, setOpenCategorySelect] = useState(false);
 
   const onFormSubmit = (data: ExpenseFormData) => {
     const { amount, date, categoryId, description, sourceId } = data;
@@ -92,6 +94,7 @@ export default function ExpenseForm({
     });
     if (closeDialog) closeDialog();
   };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onFormSubmit)} className="flex flex-col gap-3">
@@ -99,7 +102,17 @@ export default function ExpenseForm({
           control={form.control}
           name="amount"
           render={({ field }) => (
-            <FormItem>
+            <FormItem
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  const nextInput = e.currentTarget
+                    .closest('form')
+                    ?.querySelector<HTMLInputElement>(`input[name="description"]`);
+                  nextInput?.focus();
+                }
+              }}
+            >
               <FormLabel>Amount</FormLabel>
               <FormControl>
                 <Input
@@ -117,7 +130,14 @@ export default function ExpenseForm({
           control={form.control}
           name="description"
           render={({ field }) => (
-            <FormItem>
+            <FormItem
+              onKeyDown={(e) => {
+                if (e.key == 'Enter') {
+                  e.preventDefault();
+                  setOpenCalendar(true);
+                }
+              }}
+            >
               <FormLabel>Description</FormLabel>
               <FormControl>
                 <Input type="text" {...field} />
@@ -155,6 +175,7 @@ export default function ExpenseForm({
                     onSelect={(e) => {
                       field.onChange(e);
                       setOpenCalendar(false);
+                      setOpenCategorySelect(true);
                     }}
                     initialFocus
                   />
@@ -170,7 +191,12 @@ export default function ExpenseForm({
           render={({ field }) => (
             <FormItem>
               <FormLabel>Category</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                open={openCategorySelect}
+                onOpenChange={setOpenCategorySelect}
+              >
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a category" />
@@ -199,7 +225,8 @@ export default function ExpenseForm({
                 <RadioGroup
                   onValueChange={field.onChange}
                   defaultValue={field.value}
-                  className="flex flex-row flex-wrap"
+                  style={{ flexWrap: 'wrap' }}
+                  className="flex flex-row"
                 >
                   {sources.map((source) => (
                     <FormItem key={source.id}>

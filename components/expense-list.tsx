@@ -1,16 +1,14 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useExpense } from '@/context/expense-context';
-import ExpenseForm from '@/forms/expense-form';
-import { useMediaQuery } from '@/hooks/use-media-query';
 import { Expense } from '@/types/expense';
 import { format } from 'date-fns';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Edit, PlusCircle, Trash2 } from 'lucide-react';
-import { useState } from 'react';
+import { Trash2 } from 'lucide-react';
+import ExpenseFormDialog from './expense-form-dialog';
 import PriceFormatter from './price-formatter';
 import {
   Dialog,
@@ -25,39 +23,12 @@ import {
 export default function ExpenseList() {
   const { expenses, deleteExpense } = useExpense();
 
-  const [openAddExpenseDialog, setOpenAddExpenseDialog] = useState(false);
-  const [openEditExpenseDialog, setOpenEditExpenseDialog] = useState(false);
-  const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
-
-  const isMobile = useMediaQuery('min-width: 768px');
-
-  const handleDelete = (id: string) => {
-    deleteExpense(id);
-  };
-
   return (
     <Card>
       <CardContent className="flex flex-col gap-6 p-6">
         <div className="flex justify-between">
-          <h1 className="text-lg md:text-2xl font-semibold leading-none tracking-tight">
-            Latest Expenses
-          </h1>
-          <Dialog open={openAddExpenseDialog} onOpenChange={setOpenAddExpenseDialog}>
-            <DialogTrigger asChild>
-              <Button size={isMobile ? 'sm' : 'default'}>
-                <PlusCircle className="mr-2 h-4 w-4" /> Add New Expense
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Add New Expense</DialogTitle>
-                <DialogClose />
-              </DialogHeader>
-              <DialogContent>
-                <ExpenseForm closeDialog={() => setOpenAddExpenseDialog(false)} />
-              </DialogContent>
-            </DialogContent>
-          </Dialog>
+          <CardTitle className="md:text-lg">Latest Expenses</CardTitle>
+          <ExpenseFormDialog />
         </div>
 
         <ScrollArea className="lg:h-[calc(80vh-170px)]">
@@ -87,7 +58,7 @@ export default function ExpenseList() {
               >
                 <Card className="mb-4 overflow-hidden">
                   <CardContent className="p-0">
-                    <div className="flex items-center p-3 hover:bg-muted/50 transition-colors">
+                    <div className="flex items-center p-2 md:p-3 hover:bg-muted/50 transition-colors">
                       <div className="flex-1 mr-4">
                         <div className="flex items-center mb-1">
                           <div
@@ -111,34 +82,7 @@ export default function ExpenseList() {
                         </p>
                       </div>
                       <div className="ml-4 flex">
-                        <Dialog
-                          open={openEditExpenseDialog}
-                          onOpenChange={setOpenEditExpenseDialog}
-                        >
-                          <DialogTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="mr-1"
-                              onClick={() => setEditingExpense(expense)}
-                            >
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                          </DialogTrigger>
-                          <DialogContent>
-                            <DialogHeader>
-                              <DialogTitle>Update Expense</DialogTitle>
-                              <DialogClose />
-                            </DialogHeader>
-                            <DialogContent>
-                              <ExpenseForm
-                                isEdit
-                                editingExpense={editingExpense!}
-                                closeDialog={() => setOpenEditExpenseDialog(false)}
-                              />
-                            </DialogContent>
-                          </DialogContent>
-                        </Dialog>
+                        <ExpenseFormDialog isEdit expense={expense} />
                         <Dialog>
                           <DialogTrigger asChild>
                             <Button variant="ghost" size="icon">

@@ -1,12 +1,13 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { getMonthName } from '@/utils/utils';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { Button } from './ui/button';
 
-export default function DateChanger() {
+export default function DateChanger({ className }: { className?: string }) {
   const router = useRouter();
   const query = useSearchParams();
 
@@ -41,7 +42,7 @@ export default function DateChanger() {
     router.push(`?month=${currentMont}&year=${currentYear}`);
   };
   return (
-    <div className="flex flex-row justify-between items-center w-full">
+    <div className={cn('flex flex-row justify-evenly items-center w-full', className)}>
       <Button variant="ghost" onClick={() => handleChangeMonth('prev')}>
         <ArrowLeft />
       </Button>

@@ -14,8 +14,8 @@ export default function ExpensesDashboard() {
   const year = query.get('year');
   return (
     <>
-      <div className="mb-8 w-full">
-        <DateChanger />
+      <div className="md:hidden mb-4 w-full">
+        <DateChanger className="justify-between" />
       </div>
       <div className="w-full">
         <AnimatePresence mode="wait">

@@ -12,7 +12,7 @@ export default function SourceSummary() {
     <Link href="/sources">
       <Card className="hover:bg-muted/50 transition-colors">
         <CardHeader>
-          <CardTitle>Your Sources</CardTitle>
+          <CardTitle className="md:text-lg">Your Sources</CardTitle>
         </CardHeader>
         <CardContent>
           <AnimatePresence>

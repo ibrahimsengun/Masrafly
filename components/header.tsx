@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
 import AuthButton from './auth-button';
+import DateChanger from './date-changer';
 import { Button } from './ui/button';
 import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from './ui/drawer';
 import { Separator } from './ui/separator';
@@ -66,7 +67,7 @@ export const Header = ({ user }: { user: User | null }) => {
     );
   };
   return (
-    <header className="border-b py-2 h-[60px] md:h-[80px] mb-8 flex items-center">
+    <header className="border-b py-2 h-[60px] md:h-[80px] mb-4 flex items-center">
       <MobileHeader />
       <div className="hidden md:flex flex-row justify-between items-center container mx-auto">
         <div className="flex flex-row items-center gap-4">
@@ -80,6 +81,9 @@ export const Header = ({ user }: { user: User | null }) => {
               </Link>
             ))}
           </div>
+        </div>
+        <div>
+          <DateChanger className="border-x px-4 gap-4" />
         </div>
         <div className="flex flex-row gap-2 items-center">
           {isLoggedIn ? (

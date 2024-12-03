@@ -10,7 +10,7 @@ export default function ExpensesByCategory() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Expenses By Category</CardTitle>
+        <CardTitle className="md:text-lg">Expenses By Category</CardTitle>
       </CardHeader>
       <CardContent>
         <AnimatePresence>
