@@ -8,7 +8,7 @@ export const Footer = () => {
   if (isSignIn) return;
 
   return (
-    <footer className="flex justify-center p-4 text-sm border-t h-[60px] mt-8">
+    <footer className="flex justify-center p-4 text-sm border-t h-[60px] mt-4">
       develop by
       <a
         href="https://github.com/ibrahimsengun"

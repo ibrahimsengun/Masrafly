@@ -82,9 +82,11 @@ export const Header = ({ user }: { user: User | null }) => {
             ))}
           </div>
         </div>
-        <div>
-          <DateChanger className="border-x px-4 gap-4" />
-        </div>
+        {isLoggedIn && (
+          <div>
+            <DateChanger className="border-x px-4 gap-4" />
+          </div>
+        )}
         <div className="flex flex-row gap-2 items-center">
           {isLoggedIn ? (
             <AuthButton user={user} />
