@@ -115,11 +115,7 @@ export default function ExpenseForm({
             >
               <FormLabel>Amount</FormLabel>
               <FormControl>
-                <Input
-                  type="number"
-                  {...field}
-                  onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                />
+                <Input type="number" {...field} onChange={(e) => field.onChange(e.target.value)} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -177,7 +173,6 @@ export default function ExpenseForm({
                       setOpenCalendar(false);
                       setOpenCategorySelect(true);
                     }}
-                    initialFocus
                   />
                 </PopoverContent>
               </Popover>
@@ -214,7 +209,6 @@ export default function ExpenseForm({
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="sourceId"
@@ -246,7 +240,6 @@ export default function ExpenseForm({
             </FormItem>
           )}
         />
-
         <Button type="submit" className="w-full">
           {isEdit ? 'Update Expense' : 'Add Expense'}
         </Button>
