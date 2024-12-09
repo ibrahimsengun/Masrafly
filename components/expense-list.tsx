@@ -10,6 +10,7 @@ import { format } from 'date-fns';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Trash2 } from 'lucide-react';
 import { ReactNode } from 'react';
+import ExpenseFilters from './expense-filters';
 import ExpenseFormDialog from './expense-form-dialog';
 import PriceFormatter from './price-formatter';
 import {
@@ -40,6 +41,7 @@ export default function ExpenseList() {
         <h1 className="text-lg font-semibold">Latest Expenses</h1>
         <ExpenseFormDialog />
       </div>
+      <ExpenseFilters />
 
       <ScrollArea className="lg:h-[calc(100vh-290px)]">
         <AnimatePresence>
