@@ -37,7 +37,7 @@ export const Header = ({ user }: { user: User | null }) => {
             <DrawerTitle className="hidden">Menu</DrawerTitle>
             <div className="flex flex-col gap-2">
               <Link href="/">
-                <h1 className="text-lg px-4 pt-4 pb-2">finance-track</h1>
+                <h1 className="text-lg px-4 pt-4 pb-2">Masrafly</h1>
               </Link>
               <Separator />
               {protectedLinks.map((link) => (
@@ -52,7 +52,7 @@ export const Header = ({ user }: { user: User | null }) => {
           </DrawerContent>
         </Drawer>
         <Link href="/">
-          <h1 className="text-xl">finance-track</h1>
+          <h1 className="text-2xl">Masrafly</h1>
         </Link>
         <div className="flex flex-row gap-2 items-center justify-end">
           {isLoggedIn ? (
@@ -72,7 +72,7 @@ export const Header = ({ user }: { user: User | null }) => {
       <div className="hidden md:flex flex-row justify-between items-center container mx-auto">
         <div className="flex flex-row items-center gap-4">
           <Link href="/">
-            <h1 className="border-r pr-6">finance-track</h1>
+            <h1 className="text-2xl border-r pr-6 underline">Masrafly</h1>
           </Link>
           <div className="flex flex-row items-center gap-1">
             {protectedLinks.map((link) => (

@@ -16,6 +16,7 @@ interface SourceContextType {
   addSource: (name: string, balance: number) => Promise<void>;
   updateSource: (id: string, name: string, balance: number) => Promise<void>;
   deleteSource: (id: string) => Promise<void>;
+  filterSources: (sourceIds: string[]) => void;
 }
 const SourceContext = createContext<SourceContextType | undefined>(undefined);
 
@@ -35,6 +36,10 @@ export const SourceProvider = ({
     } catch (error) {
       console.error('Failed to refresh sources:', error);
     }
+  };
+
+  const filterSources = (sourceIds: string[]) => {
+    setSources((prev) => prev.filter((source) => sourceIds.includes(source.id)));
   };
 
   const addSource = async (name: string, balance: number) => {
@@ -66,7 +71,15 @@ export const SourceProvider = ({
 
   return (
     <SourceContext.Provider
-      value={{ sources, setSources, refreshSources, addSource, updateSource, deleteSource }}
+      value={{
+        sources,
+        setSources,
+        refreshSources,
+        addSource,
+        updateSource,
+        deleteSource,
+        filterSources
+      }}
     >
       {children}
     </SourceContext.Provider>

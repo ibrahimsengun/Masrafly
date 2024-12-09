@@ -37,13 +37,14 @@ export default function ExpenseList() {
   };
   return (
     <MobileWrapper>
-      <div className="flex items-center justify-between mb-4 md:mb-0">
+      <div className="flex items-center justify-between md:mb-0">
         <h1 className="text-lg font-semibold">Latest Expenses</h1>
         <ExpenseFormDialog />
       </div>
+
       <ExpenseFilters />
 
-      <ScrollArea className="lg:h-[calc(100vh-290px)]">
+      <ScrollArea className="lg:h-[calc(100vh-346px)] mt-4 md:mt-0">
         <AnimatePresence>
           {expenses.length == 0 && (
             <motion.div

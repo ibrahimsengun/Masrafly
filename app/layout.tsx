@@ -12,7 +12,7 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata = {
   metadataBase: new URL(defaultUrl),
-  title: 'finance-track | Personal Finance Management',
+  title: 'Masrafly | Personal Finance Management',
   description: 'Easily track your income and expenses, reach your financial goals'
 };
 

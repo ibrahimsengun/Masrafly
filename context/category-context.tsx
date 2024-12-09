@@ -16,6 +16,7 @@ interface CategoryContextType {
   createCategory: (name: string, color: string) => Promise<void>;
   deleteCategory: (id: string) => Promise<void>;
   updateCategory: (id: string, name: string, color: string) => Promise<void>;
+  filterCategories: (selectedCategoryIds: string[]) => void;
 }
 const CategoryContext = createContext<CategoryContextType | undefined>(undefined);
 
@@ -35,6 +36,12 @@ export const CategoryProvider = ({
     } catch (error) {
       console.error('Failed to refresh sources:', error);
     }
+  };
+
+  const filterCategories = (selectedCategoryIds: string[]) => {
+    return setCategories((prev) =>
+      prev.filter((category) => selectedCategoryIds.includes(category.id))
+    );
   };
 
   const createCategory = async (name: string, color: string) => {
@@ -72,7 +79,8 @@ export const CategoryProvider = ({
         refreshCategories,
         createCategory,
         deleteCategory,
-        updateCategory
+        updateCategory,
+        filterCategories
       }}
     >
       {children}

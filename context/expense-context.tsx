@@ -8,14 +8,16 @@ import {
   getExpensesAction,
   updateExpenseAction
 } from '@/actions/expense-actions';
-import { Expense, ExpenseByCategory } from '@/types/expense';
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { Expense, ExpenseByCategory, Filter } from '@/types/expense';
+import { createContext, ReactNode, SetStateAction, useContext, useEffect, useState } from 'react';
 import { useSource } from './source-context';
 
 interface ExpenseContextType {
   expenses: Expense[];
   expenseByCategory: ExpenseByCategory[];
   isLoading: boolean;
+  currentFilters?: Filter;
+  setCurrentFilters: React.Dispatch<SetStateAction<Filter | undefined>>;
   refreshExpenses: () => Promise<void>;
   addExpense: (
     amount: number,
@@ -34,6 +36,7 @@ interface ExpenseContextType {
   ) => Promise<void>;
   deleteExpense: (expenseId: string) => Promise<void>;
   getCategoryExpenses: () => Promise<ExpenseByCategory[] | undefined>;
+  filterExpenses: (filter: Filter) => void;
 }
 
 const ExpenseContext = createContext<ExpenseContextType | undefined>(undefined);
@@ -54,6 +57,7 @@ export const ExpenseProvider = ({
     useState<ExpenseByCategory[]>(initialExpensesByCategory);
   const { refreshSources } = useSource();
   const [isLoading, setIsLoading] = useState(true);
+  const [currentFilters, setCurrentFilters] = useState<Filter>();
 
   useEffect(() => {
     setExpenses(initialExpenses);
@@ -79,6 +83,27 @@ export const ExpenseProvider = ({
     }
   };
 
+  const filterExpenses = (filter: Filter) => {
+    let filteredExpenses = initialExpenses;
+    if ((filter.selectedCategoryIds?.length ?? 0) > 0) {
+      filteredExpenses = filteredExpenses.filter((expense) =>
+        filter.selectedCategoryIds?.includes(expense.category?.id || '')
+      );
+    }
+    if ((filter.selectedSourceIds?.length ?? 0) > 0) {
+      filteredExpenses = filteredExpenses.filter(
+        (expense) => filter.selectedSourceIds?.includes(expense.source?.id || '') ?? false
+      );
+    }
+    if (filter.minAmount) {
+      filteredExpenses = filteredExpenses.filter((expense) => expense.amount >= filter.minAmount!);
+    }
+    if (filter.maxAmount) {
+      filteredExpenses = filteredExpenses.filter((expense) => expense.amount <= filter.maxAmount!);
+    }
+    setExpenses(filteredExpenses);
+  };
+
   const addExpense = async (
     amount: number,
     description: string | null,
@@ -93,6 +118,10 @@ export const ExpenseProvider = ({
       console.error('Failed to add expense:', error);
     }
   };
+
+  useEffect(() => {
+    if (currentFilters) filterExpenses(currentFilters);
+  }, [currentFilters]);
 
   const updateExpense = async (
     expenseId: string,
@@ -134,11 +163,14 @@ export const ExpenseProvider = ({
         expenses,
         expenseByCategory,
         isLoading,
+        currentFilters,
+        setCurrentFilters,
         refreshExpenses,
         addExpense,
         updateExpense,
         deleteExpense,
-        getCategoryExpenses
+        getCategoryExpenses,
+        filterExpenses
       }}
     >
       {children}

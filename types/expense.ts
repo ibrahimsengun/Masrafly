@@ -14,3 +14,10 @@ export interface ExpenseByCategory {
   category_color: string;
   total_expense: number;
 }
+
+export interface Filter {
+  selectedCategoryIds?: string[];
+  selectedSourceIds?: string[];
+  minAmount?: number;
+  maxAmount?: number;
+}
