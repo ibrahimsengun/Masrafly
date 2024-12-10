@@ -3,21 +3,23 @@
 import { useCategory } from '@/context/category-context';
 import { useExpense } from '@/context/expense-context';
 import { useSource } from '@/context/source-context';
-import { Hash, ListRestart, Tag, Wallet } from 'lucide-react';
+import { ListRestart, Tag, Wallet } from 'lucide-react';
 import { useCallback } from 'react';
 import { Button } from './ui/button';
 import { Checkbox } from './ui/checkbox';
 import { Label } from './ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { Slider } from './ui/slider';
 
 export default function ExpenseFilters() {
-  const { expenses, currentFilters, setCurrentFilters } = useExpense();
+  const { currentFilters, setCurrentFilters } = useExpense();
   const { categories } = useCategory();
   const { sources } = useSource();
 
-  const minAmount = Math.min(...expenses.map((expense) => expense.amount));
-  const maxAmount = Math.max(...expenses.map((expense) => expense.amount));
+  // const [amountFilterValue, setAmountFilterValue] = useState([minAmount, maxAmount]);
+
+  const handleSliderChange = useCallback((value: number[]) => {
+    setCurrentFilters((prev) => ({ ...prev, minAmount: value[0], maxAmount: value[1] }));
+  }, []);
 
   const setCategoryFilter = useCallback((selectedCategoryIds: string[]) => {
     setCurrentFilters((prev) => ({ ...prev, selectedCategoryIds }));
@@ -139,10 +141,20 @@ export default function ExpenseFilters() {
         </PopoverContent>
       </Popover>
 
-      <div className="flex flex-row gap-2 border rounded-md px-3 items-center">
+      {/* <div className="flex flex-row gap-2 border rounded-md px-3 items-center">
         <Hash className="w-4" />
-        <Slider className="w-24" min={minAmount} max={maxAmount} />
-      </div>
+        <Slider
+          className="w-24"
+          multipleThumb
+          min={minAmount}
+          max={maxAmount}
+          value={amountFilterValue}
+          defaultValue={[minAmount, maxAmount]}
+          onValueChange={setAmountFilterValue}
+          onValueCommit={handleSliderChange}
+        />
+        {amountFilterValue[0] + ' - ' + amountFilterValue[1]}
+      </div> */}
 
       <Button
         variant="outline"

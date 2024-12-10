@@ -17,6 +17,8 @@ interface ExpenseContextType {
   expenseByCategory: ExpenseByCategory[];
   isLoading: boolean;
   currentFilters?: Filter;
+  minAmount: number;
+  maxAmount: number;
   setCurrentFilters: React.Dispatch<SetStateAction<Filter | undefined>>;
   refreshExpenses: () => Promise<void>;
   addExpense: (
@@ -164,6 +166,8 @@ export const ExpenseProvider = ({
         expenseByCategory,
         isLoading,
         currentFilters,
+        minAmount: Math.min(...initialExpenses.map((expense) => expense.amount)),
+        maxAmount: Math.max(...initialExpenses.map((expense) => expense.amount)),
         setCurrentFilters,
         refreshExpenses,
         addExpense,

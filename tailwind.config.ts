@@ -18,8 +18,8 @@ const config = {
         sm: '1rem',
         md: '2rem',
         lg: '3rem',
-        xl: '10rem',
-        '2xl': '12rem'
+        xl: '6rem',
+        '2xl': '8rem'
       },
       screens: {
         sm: '640px',
