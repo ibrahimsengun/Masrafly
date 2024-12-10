@@ -32,7 +32,7 @@ export default function Landing() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          FinanceTrack helps you manage your money smarter. Track expenses, set budgets, and achieve
+          Masrafly helps you manage your money smarter. Track expenses, set budgets, and achieve
           your financial goals with ease.
         </motion.p>
         <motion.div
@@ -105,7 +105,7 @@ export default function Landing() {
               {
                 name: 'Alex M.',
                 quote:
-                  "FinanceTrack has completely transformed how I manage my money. It's intuitive and insightful!"
+                  "Masrafly has completely transformed how I manage my money. It's intuitive and insightful!"
               },
               {
                 name: 'Sarah L.',

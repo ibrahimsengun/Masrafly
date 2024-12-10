@@ -9,7 +9,7 @@ export default function SignIn() {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-lg md:text-2xl font-semibold mb-2">
-            Welcome to FinanceTrack
+            Welcome to Masrafly
           </CardTitle>
           <p className="text-muted-foreground">Manage your finances with ease</p>
         </CardHeader>
