@@ -115,7 +115,11 @@ export default function ExpenseForm({
             >
               <FormLabel>Amount</FormLabel>
               <FormControl>
-                <Input type="number" {...field} onChange={(e) => field.onChange(e.target.value)} />
+                <Input
+                  type="number"
+                  {...field}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
