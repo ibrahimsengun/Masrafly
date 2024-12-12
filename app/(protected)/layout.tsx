@@ -17,6 +17,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   if (!user) {
     return redirect('/sign-in');
   }
+
   const sources = await getSourcesAction();
   const categories = await getCategoriesAction();
   const preferences = await getPreferencesAction();

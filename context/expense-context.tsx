@@ -8,7 +8,7 @@ import {
   getExpensesAction,
   updateExpenseAction
 } from '@/actions/expense-actions';
-import { Expense, ExpenseByCategory, Filter } from '@/types/expense';
+import { Expense, ExpenseByCategory, Filter, OrderEnum } from '@/types/expense';
 import { createContext, ReactNode, SetStateAction, useContext, useEffect, useState } from 'react';
 import { useSource } from './source-context';
 
@@ -39,6 +39,7 @@ interface ExpenseContextType {
   deleteExpense: (expenseId: string) => Promise<void>;
   getCategoryExpenses: () => Promise<ExpenseByCategory[] | undefined>;
   filterExpenses: (filter: Filter) => void;
+  orderExpenses: (order: OrderEnum) => void;
 }
 
 const ExpenseContext = createContext<ExpenseContextType | undefined>(undefined);
@@ -68,6 +69,10 @@ export const ExpenseProvider = ({
   useEffect(() => {
     setExpenseByCategory(initialExpensesByCategory);
   }, [initialExpensesByCategory]);
+
+  useEffect(() => {
+    if (currentFilters) filterExpenses(currentFilters);
+  }, [currentFilters]);
 
   const refreshExpenses = async (method: 'add' | 'delete' | 'update' | 'empty' = 'empty') => {
     try {
@@ -121,10 +126,6 @@ export const ExpenseProvider = ({
     }
   };
 
-  useEffect(() => {
-    if (currentFilters) filterExpenses(currentFilters);
-  }, [currentFilters]);
-
   const updateExpense = async (
     expenseId: string,
     amount?: number,
@@ -159,6 +160,29 @@ export const ExpenseProvider = ({
     }
   };
 
+  const orderExpenses = (order: OrderEnum) => {
+    let sortedExpenses = [...expenses];
+    switch (order) {
+      case OrderEnum.DateNew:
+        sortedExpenses = sortedExpenses.sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+        );
+        break;
+      case OrderEnum.DateOld:
+        sortedExpenses = sortedExpenses.sort(
+          (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+        );
+        break;
+      case OrderEnum.AmountAsc:
+        sortedExpenses = sortedExpenses.sort((a, b) => a.amount - b.amount);
+        break;
+      case OrderEnum.AmountDesc:
+        sortedExpenses = sortedExpenses.sort((a, b) => b.amount - a.amount);
+        break;
+    }
+    setExpenses(sortedExpenses);
+  };
+
   return (
     <ExpenseContext.Provider
       value={{
@@ -174,7 +198,8 @@ export const ExpenseProvider = ({
         updateExpense,
         deleteExpense,
         getCategoryExpenses,
-        filterExpenses
+        filterExpenses,
+        orderExpenses
       }}
     >
       {children}

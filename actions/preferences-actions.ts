@@ -31,7 +31,7 @@ export const getPreferencesAction = async (): Promise<Preferences> => {
       currency: 'USD',
       number_format: 'comma',
       decimal_length: 2
-    })
+    } as Preferences)
     .select()
     .single();
 

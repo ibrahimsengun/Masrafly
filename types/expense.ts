@@ -1,3 +1,5 @@
+import { ArrowDown, ArrowUp, CalendarArrowDown, CalendarArrowUp } from 'lucide-react';
+
 export interface Expense {
   id: string;
   user_id: string;
@@ -21,3 +23,17 @@ export interface Filter {
   minAmount?: number;
   maxAmount?: number;
 }
+
+export enum OrderEnum {
+  DateNew = 'date-new',
+  DateOld = 'date-old',
+  AmountAsc = 'amount-asc',
+  AmountDesc = 'amount-desc'
+}
+
+export const orderOptions = [
+  { value: OrderEnum.DateNew, label: 'Newest', icon: CalendarArrowUp },
+  { value: OrderEnum.DateOld, label: 'Oldest', icon: CalendarArrowDown },
+  { value: OrderEnum.AmountAsc, label: 'Amount Asc.', icon: ArrowUp },
+  { value: OrderEnum.AmountDesc, label: 'Amount Desc.', icon: ArrowDown }
+];

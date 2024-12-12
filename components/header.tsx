@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
 import AuthButton from './auth-button';
-import DateChanger from './date-changer';
 import { Button } from './ui/button';
 import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from './ui/drawer';
 import { Separator } from './ui/separator';
@@ -82,11 +81,6 @@ export const Header = ({ user }: { user: User | null }) => {
             ))}
           </div>
         </div>
-        {isLoggedIn && (
-          <div>
-            <DateChanger className="border-x px-4 gap-4" />
-          </div>
-        )}
         <div className="flex flex-row gap-2 items-center">
           {isLoggedIn ? (
             <AuthButton user={user} />
