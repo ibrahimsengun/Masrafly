@@ -115,11 +115,7 @@ export default function ExpenseForm({
             >
               <FormLabel>Amount</FormLabel>
               <FormControl>
-                <Input
-                  type="number"
-                  {...field}
-                  onChange={(e) => field.onChange(Number(e.target.value))}
-                />
+                <Input {...field} onChange={field.onChange} inputMode="numeric" pattern="[0-9]*" />
               </FormControl>
               <FormMessage />
             </FormItem>
