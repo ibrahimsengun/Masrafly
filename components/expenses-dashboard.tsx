@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useSearchParams } from 'next/navigation';
 import DateChanger from './date-changer';
+import ExpenseFilters from './expense-filters';
 import ExpenseList from './expense-list';
 import ExpensesByCategory from './expenses-by-category';
 import SourceSummary from './source-summary';
