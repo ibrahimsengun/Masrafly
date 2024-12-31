@@ -86,13 +86,11 @@ export default function ExpenseFormDialog({
           <DialogTitle>{isEdit ? 'Update Expense' : 'Add New Expense'}</DialogTitle>
           <DialogClose />
         </DialogHeader>
-        <DialogContent>
-          <ExpenseForm
-            isEdit={isEdit}
-            editingExpense={isEdit ? expense : undefined}
-            closeDialog={() => setOpen(false)}
-          />
-        </DialogContent>
+        <ExpenseForm
+          isEdit={isEdit}
+          editingExpense={isEdit ? expense : undefined}
+          closeDialog={() => setOpen(false)}
+        />
       </DialogContent>
     </Dialog>
   );

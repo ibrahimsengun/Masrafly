@@ -117,6 +117,7 @@ export default function ExpenseForm({
               <FormControl>
                 <Input
                   {...field}
+                  value={field.value === 0 ? '' : field.value}
                   onChange={(e) => {
                     const value = Number(e.target.value);
                     field.onChange(value);
@@ -158,7 +159,7 @@ export default function ExpenseForm({
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <FormLabel>Date</FormLabel>
-              <Popover open={openCalendar} onOpenChange={setOpenCalendar}>
+              <Popover modal open={openCalendar} onOpenChange={setOpenCalendar}>
                 <PopoverTrigger asChild>
                   <FormControl>
                     <Button
@@ -180,7 +181,7 @@ export default function ExpenseForm({
                     onSelect={(e) => {
                       field.onChange(e);
                       setOpenCalendar(false);
-                      setOpenCategorySelect(true);
+                      if (!isEdit) setOpenCategorySelect(true);
                     }}
                   />
                 </PopoverContent>
@@ -196,6 +197,7 @@ export default function ExpenseForm({
             <FormItem>
               <FormLabel>Category</FormLabel>
               <Select
+                value={field.value}
                 onValueChange={field.onChange}
                 defaultValue={field.value}
                 open={openCategorySelect}
