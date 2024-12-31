@@ -43,13 +43,13 @@ export default function DateChanger({ className }: { className?: string }) {
   };
   return (
     <div className={cn('flex flex-row justify-evenly items-center w-full', className)}>
-      <Button variant="ghost" onClick={() => handleChangeMonth('prev')}>
+      <Button variant="ghost" size="sm" onClick={() => handleChangeMonth('prev')}>
         <ArrowLeft />
       </Button>
       <div>
         {getMonthName(month)}, {year}
       </div>
-      <Button variant="ghost" onClick={() => handleChangeMonth('next')}>
+      <Button variant="ghost" size="sm" onClick={() => handleChangeMonth('next')}>
         <ArrowRight />
       </Button>
     </div>

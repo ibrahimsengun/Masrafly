@@ -64,9 +64,9 @@ export default function ExpenseFilters() {
   );
 
   return (
-    <div className="flex flex-row justify-between mt-4 md:mt-0">
+    <div className="flex flex-row justify-between my-4 md:mt-0">
       <div className="flex flex-row  flex-wrap gap-4">
-        <Popover>
+        <Popover modal>
           <PopoverTrigger asChild>
             <Button
               variant={currentFilters?.selectedCategoryIds?.length ? 'default' : 'outline'}
@@ -81,7 +81,7 @@ export default function ExpenseFilters() {
               )}
             </Button>
           </PopoverTrigger>
-          <PopoverContent>
+          <PopoverContent align="start">
             <div className="flex flex-col gap-4">
               <span className="text-base">Filter Categories</span>
               <div className="flex flex-col gap-2">
@@ -112,7 +112,7 @@ export default function ExpenseFilters() {
           </PopoverContent>
         </Popover>
 
-        <Popover>
+        <Popover modal>
           <PopoverTrigger asChild>
             <Button
               variant={currentFilters?.selectedSourceIds?.length ? 'default' : 'outline'}
@@ -127,7 +127,7 @@ export default function ExpenseFilters() {
               )}
             </Button>
           </PopoverTrigger>
-          <PopoverContent>
+          <PopoverContent align="start">
             <div className="flex flex-col gap-4">
               <span className="text-base">Filter Sources</span>
               <div className="flex flex-col gap-2">
