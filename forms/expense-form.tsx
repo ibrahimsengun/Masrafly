@@ -87,7 +87,7 @@ export default function ExpenseForm({
           categoryId!,
           sourceId!
         )
-      : addExpense(amount, description!, date.toISOString(), categoryId!, sourceId!);
+      : addExpense(Number(amount), description!, date.toISOString(), categoryId!, sourceId!);
     toast({
       title: isEdit ? 'Expense Updated' : 'Expense Added',
       description: isEdit ? 'Your expense has been updated' : 'Your expense has been added'
@@ -115,7 +115,16 @@ export default function ExpenseForm({
             >
               <FormLabel>Amount</FormLabel>
               <FormControl>
-                <Input {...field} onChange={field.onChange} inputMode="numeric" pattern="[0-9]*" />
+                <Input
+                  {...field}
+                  onChange={(e) => {
+                    const value = Number(e.target.value);
+                    field.onChange(value);
+                  }}
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  type="number"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
