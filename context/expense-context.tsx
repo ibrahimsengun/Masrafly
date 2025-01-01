@@ -4,18 +4,23 @@
 import {
   addExpenseAction,
   deleteExpenseAction,
-  getCategoryExpensesAction,
   getExpensesAction,
   updateExpenseAction
 } from '@/actions/expense-actions';
-import { Expense, ExpenseByCategory, Filter, OrderEnum } from '@/types/expense';
-import { createContext, ReactNode, SetStateAction, useContext, useEffect, useState } from 'react';
+import { Expense, Filter, OrderEnum } from '@/types/expense';
+import {
+  createContext,
+  ReactNode,
+  SetStateAction,
+  useCallback,
+  useContext,
+  useEffect,
+  useState
+} from 'react';
 import { useSource } from './source-context';
 
 interface ExpenseContextType {
   expenses: Expense[];
-  expenseByCategory: ExpenseByCategory[];
-  isLoading: boolean;
   currentFilters?: Filter;
   minAmount: number;
   maxAmount: number;
@@ -37,7 +42,6 @@ interface ExpenseContextType {
     sourceId?: string | null
   ) => Promise<void>;
   deleteExpense: (expenseId: string) => Promise<void>;
-  getCategoryExpenses: () => Promise<ExpenseByCategory[] | undefined>;
   filterExpenses: (filter: Filter) => void;
   orderExpenses: (order: OrderEnum) => void;
 }
@@ -47,19 +51,15 @@ const ExpenseContext = createContext<ExpenseContextType | undefined>(undefined);
 export const ExpenseProvider = ({
   children,
   initialExpenses,
-  initialExpensesByCategory,
   date
 }: {
   children: ReactNode;
   initialExpenses: Expense[];
-  initialExpensesByCategory: ExpenseByCategory[];
   date: { month: number; year: number };
 }) => {
   const [expenses, setExpenses] = useState<Expense[]>(initialExpenses);
-  const [expenseByCategory, setExpenseByCategory] =
-    useState<ExpenseByCategory[]>(initialExpensesByCategory);
+
   const { refreshSources } = useSource();
-  const [isLoading, setIsLoading] = useState(true);
   const [currentFilters, setCurrentFilters] = useState<Filter>();
 
   useEffect(() => {
@@ -67,30 +67,21 @@ export const ExpenseProvider = ({
   }, [initialExpenses]);
 
   useEffect(() => {
-    setExpenseByCategory(initialExpensesByCategory);
-  }, [initialExpensesByCategory]);
-
-  useEffect(() => {
     if (currentFilters) filterExpenses(currentFilters);
   }, [currentFilters]);
 
   const refreshExpenses = async (method: 'add' | 'delete' | 'update' | 'empty' = 'empty') => {
     try {
-      setIsLoading(true);
       const _expenses = await getExpensesAction(date.month, date.year);
       setExpenses(_expenses);
 
-      const _expensesByCategory = await getCategoryExpensesAction(date.month, date.year);
-      setExpenseByCategory(_expensesByCategory);
       if (['add', 'update', 'delete'].includes(method)) refreshSources();
     } catch (error) {
       console.error('Failed to load expenses:', error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
-  const filterExpenses = (filter: Filter) => {
+  const filterExpenses = useCallback((filter: Filter) => {
     let filteredExpenses = initialExpenses;
     if ((filter.selectedCategoryIds?.length ?? 0) > 0) {
       filteredExpenses = filteredExpenses.filter((expense) =>
@@ -109,7 +100,7 @@ export const ExpenseProvider = ({
       filteredExpenses = filteredExpenses.filter((expense) => expense.amount <= filter.maxAmount!);
     }
     setExpenses(filteredExpenses);
-  };
+  }, []);
 
   const addExpense = async (
     amount: number,
@@ -151,15 +142,6 @@ export const ExpenseProvider = ({
     }
   };
 
-  const getCategoryExpenses = async () => {
-    try {
-      const data: ExpenseByCategory[] = await getCategoryExpensesAction();
-      return data;
-    } catch (error) {
-      console.error('Failed to load category expenses:', error);
-    }
-  };
-
   const orderExpenses = (order: OrderEnum) => {
     let sortedExpenses = [...expenses];
     switch (order) {
@@ -187,8 +169,6 @@ export const ExpenseProvider = ({
     <ExpenseContext.Provider
       value={{
         expenses,
-        expenseByCategory,
-        isLoading,
         currentFilters,
         minAmount: Math.min(...initialExpenses.map((expense) => expense.amount)),
         maxAmount: Math.max(...initialExpenses.map((expense) => expense.amount)),
@@ -197,7 +177,6 @@ export const ExpenseProvider = ({
         addExpense,
         updateExpense,
         deleteExpense,
-        getCategoryExpenses,
         filterExpenses,
         orderExpenses
       }}

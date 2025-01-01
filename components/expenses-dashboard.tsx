@@ -1,5 +1,6 @@
 'use client';
 
+import { ExpenseByCategory } from '@/types/expense';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useSearchParams } from 'next/navigation';
 import DateChanger from './date-changer';
@@ -8,7 +9,11 @@ import ExpenseList from './expense-list';
 import ExpensesByCategory from './expenses-by-category';
 import SourceSummary from './source-summary';
 
-export default function ExpensesDashboard() {
+export default function ExpensesDashboard({
+  expensesByCategory
+}: {
+  expensesByCategory: ExpenseByCategory[];
+}) {
   const query = useSearchParams();
 
   const month = query.get('month');
@@ -36,7 +41,7 @@ export default function ExpensesDashboard() {
               <div className="flex flex-col gap-4">
                 <DateChanger className="justify-between" />
                 <SourceSummary />
-                <ExpensesByCategory />
+                <ExpensesByCategory expensesByCategory={expensesByCategory} />
               </div>
             </div>
           </motion.div>

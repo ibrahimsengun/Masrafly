@@ -13,12 +13,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: Se
   const expensesByCategory = await getCategoryExpensesAction(month, year);
 
   return (
-    <ExpenseProvider
-      initialExpenses={expenses}
-      initialExpensesByCategory={expensesByCategory}
-      date={{ month, year }}
-    >
-      <ExpensesDashboard />
+    <ExpenseProvider initialExpenses={expenses} date={{ month, year }}>
+      <ExpensesDashboard expensesByCategory={expensesByCategory} />
     </ExpenseProvider>
   );
 }

@@ -1,12 +1,15 @@
 'use client';
 
-import { useExpense } from '@/context/expense-context';
+import { ExpenseByCategory } from '@/types/expense';
 import { AnimatePresence, motion } from 'framer-motion';
 import PriceFormatter from './price-formatter';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 
-export default function ExpensesByCategory() {
-  const { expenseByCategory } = useExpense();
+export default function ExpensesByCategory({
+  expensesByCategory
+}: {
+  expensesByCategory: ExpenseByCategory[];
+}) {
   return (
     <Card>
       <CardHeader>
@@ -15,7 +18,7 @@ export default function ExpensesByCategory() {
       <CardContent>
         <AnimatePresence>
           <div className="flex flex-col gap-2">
-            {expenseByCategory.length == 0 && (
+            {expensesByCategory.length == 0 && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -25,7 +28,7 @@ export default function ExpensesByCategory() {
                 <div className="text-muted-foreground">There is no data</div>
               </motion.div>
             )}
-            {expenseByCategory?.map((category) => (
+            {expensesByCategory?.map((category) => (
               <motion.div
                 key={category.category_name}
                 initial={{ opacity: 0, y: 20 }}
