@@ -39,7 +39,7 @@ export default function ExpensesDashboard({
                 <ExpenseList />
               </div>
               <div className="flex flex-col gap-4">
-                <DateChanger className="justify-between" />
+                <DateChanger className="hidden md:flex justify-between" />
                 <SourceSummary />
                 <ExpensesByCategory expensesByCategory={expensesByCategory} />
               </div>

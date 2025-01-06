@@ -3,8 +3,9 @@
 import { useCategory } from '@/context/category-context';
 import { useExpense } from '@/context/expense-context';
 import { useSource } from '@/context/source-context';
+import { useMediaQuery } from '@/hooks/use-media-query';
 import { OrderEnum, orderOptions } from '@/types/expense';
-import { ArrowDownUp, Hash, ListRestart, Tag, Wallet } from 'lucide-react';
+import { ArrowDownUp, Filter, Hash, ListRestart, Tag, Wallet } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import PriceFormatter from './price-formatter';
 import { Button } from './ui/button';
@@ -18,6 +19,7 @@ export default function ExpenseFilters() {
   const { currentFilters, minAmount, maxAmount, setCurrentFilters, orderExpenses } = useExpense();
   const { categories } = useCategory();
   const { sources } = useSource();
+  const isMobile = useMediaQuery('(max-width: 768px)');
 
   const [selectedOrderType, setSelectedOrderType] = useState<string>();
 
@@ -65,9 +67,23 @@ export default function ExpenseFilters() {
     [currentFilters]
   );
 
+  const [openFilters, setOpenFilters] = useState(!isMobile);
+
   return (
     <div className="flex flex-col gap-4 my-4 md:mt-0">
-      <div className="flex flex-row justify-between">
+      <Button
+        size="sm"
+        variant={openFilters ? 'default' : 'outline'}
+        className="md:hidden flex flex-row gap-2"
+        onClick={() => setOpenFilters((prev) => !prev)}
+      >
+        <Filter className="w-4" />
+        Filters
+      </Button>
+      <div
+        className="flex-row justify-between "
+        style={{ display: openFilters || !isMobile ? 'flex' : 'none' }}
+      >
         <div className="flex flex-row flex-wrap gap-4">
           <Popover modal>
             <PopoverTrigger asChild>
@@ -157,16 +173,41 @@ export default function ExpenseFilters() {
             </PopoverContent>
           </Popover>
 
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setCurrentFilters({ selectedCategoryIds: [], selectedSourceIds: [] })}
-            className="flex flex-row items-center gap-2"
-          >
-            <ListRestart className="w-5" />
-            Reset Filters
-          </Button>
+          <Popover modal>
+            <PopoverTrigger asChild>
+              <Button
+                variant={
+                  (currentFilters?.minAmount ?? 0) == minAmount ||
+                  (currentFilters?.maxAmount ?? 0) == maxAmount
+                    ? 'default'
+                    : 'outline'
+                }
+                className="flex flex-row gap-2"
+                size="sm"
+              >
+                <Hash className="w-4" /> Amount
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent align="start">
+              <div className="flex flex-col justify-center items-center gap-2">
+                <Slider
+                  multipleThumb
+                  min={minAmount}
+                  max={maxAmount}
+                  value={amountFilterValue}
+                  defaultValue={[minAmount, maxAmount]}
+                  onValueChange={setAmountFilterValue}
+                  onValueCommit={handleSliderChange}
+                />
+                <div>
+                  <PriceFormatter price={amountFilterValue[0]} /> -{' '}
+                  <PriceFormatter price={amountFilterValue[1]} />
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
+
         <div>
           <Select value={selectedOrderType} onValueChange={handleSelectChange}>
             <SelectTrigger className="w-42 h-9">
@@ -191,41 +232,16 @@ export default function ExpenseFilters() {
           </Select>
         </div>
       </div>
-      <div>
-        <Popover modal>
-          <PopoverTrigger asChild>
-            <Button
-              variant={
-                (currentFilters?.minAmount ?? 0) == minAmount ||
-                (currentFilters?.maxAmount ?? 0) == maxAmount
-                  ? 'default'
-                  : 'outline'
-              }
-              className="flex flex-row gap-2"
-              size="sm"
-            >
-              <Hash className="w-4" /> Amount
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent align="start">
-            <div className="flex flex-col justify-center items-center gap-2">
-              <Slider
-                multipleThumb
-                min={minAmount}
-                max={maxAmount}
-                value={amountFilterValue}
-                defaultValue={[minAmount, maxAmount]}
-                onValueChange={setAmountFilterValue}
-                onValueCommit={handleSliderChange}
-              />
-              <div>
-                <PriceFormatter price={amountFilterValue[0]} /> -{' '}
-                <PriceFormatter price={amountFilterValue[1]} />
-              </div>
-            </div>
-          </PopoverContent>
-        </Popover>
-      </div>
+
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => setCurrentFilters({ selectedCategoryIds: [], selectedSourceIds: [] })}
+        className="flex flex-row items-center gap-2"
+      >
+        <ListRestart className="w-5" />
+        Reset Filters
+      </Button>
     </div>
   );
 }
