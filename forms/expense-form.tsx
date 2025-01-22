@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/select';
 import { useCategory } from '@/context/category-context';
 import { useExpense } from '@/context/expense-context';
+import { usePreferences } from '@/context/preferences-context';
 import { useSource } from '@/context/source-context';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
@@ -33,18 +34,6 @@ import { CalendarIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-
-const expenseSchema = z.object({
-  amount: z.number().positive('Amount must be a positive number'),
-  description: z.string().optional(),
-  date: z.date({
-    required_error: 'Date is required'
-  }),
-  categoryId: z.string({ required_error: 'Select a category' }),
-  sourceId: z.string({ required_error: 'Select a source' })
-});
-
-type ExpenseFormData = z.infer<typeof expenseSchema>;
 
 interface ExpenseFormProps {
   isEdit?: boolean;
@@ -57,6 +46,30 @@ export default function ExpenseForm({
   editingExpense,
   closeDialog
 }: ExpenseFormProps) {
+  const expenseSchema = z
+    .object({
+      amount: z.number().positive('Amount must be a positive number'),
+      description: z.string().optional(),
+      date: z.date({
+        required_error: 'Date is required'
+      }),
+      categoryId: z.string({ required_error: 'Select a category' }),
+      sourceId: z.string().optional()
+    })
+    .refine(
+      (data) => {
+        if (preferences.track_sources) {
+          return !!data.sourceId;
+        }
+        return true;
+      },
+      {
+        path: ['sourceId'],
+        message: 'Select a source'
+      }
+    );
+  type ExpenseFormData = z.infer<typeof expenseSchema>;
+
   const form = useForm<ExpenseFormData>({
     resolver: zodResolver(expenseSchema),
     defaultValues: {
@@ -67,6 +80,8 @@ export default function ExpenseForm({
       sourceId: editingExpense?.source?.id || undefined
     }
   });
+
+  const { preferences } = usePreferences();
 
   const { categories } = useCategory();
   const { sources } = useSource();
@@ -226,37 +241,41 @@ export default function ExpenseForm({
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="sourceId"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Source</FormLabel>
-              <FormControl>
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  style={{ flexWrap: 'wrap' }}
-                  className="flex flex-row"
-                >
-                  {sources.map((source) => (
-                    <FormItem key={source.id}>
-                      <FormControl>
-                        <RadioGroupCard value={source.id}>
-                          <div className="p-3">
-                            <p className="font-semibold text-sm whitespace-nowrap">{source.name}</p>
-                            <PriceFormatter price={source.balance} className="text-xs" />
-                          </div>
-                        </RadioGroupCard>
-                      </FormControl>
-                    </FormItem>
-                  ))}
-                </RadioGroup>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {preferences.track_sources && (
+          <FormField
+            control={form.control}
+            name="sourceId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Source</FormLabel>
+                <FormControl>
+                  <RadioGroup
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    style={{ flexWrap: 'wrap' }}
+                    className="flex flex-row"
+                  >
+                    {sources.map((source) => (
+                      <FormItem key={source.id}>
+                        <FormControl>
+                          <RadioGroupCard value={source.id}>
+                            <div className="p-3">
+                              <p className="font-semibold text-sm whitespace-nowrap">
+                                {source.name}
+                              </p>
+                              <PriceFormatter price={source.balance} className="text-xs" />
+                            </div>
+                          </RadioGroupCard>
+                        </FormControl>
+                      </FormItem>
+                    ))}
+                  </RadioGroup>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
         <Button type="submit" className="w-full">
           {isEdit ? 'Update Expense' : 'Add Expense'}
         </Button>

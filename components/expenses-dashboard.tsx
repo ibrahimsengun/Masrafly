@@ -1,5 +1,6 @@
 'use client';
 
+import { usePreferences } from '@/context/preferences-context';
 import { ExpenseByCategory } from '@/types/expense';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useSearchParams } from 'next/navigation';
@@ -15,9 +16,10 @@ export default function ExpensesDashboard({
   expensesByCategory: ExpenseByCategory[];
 }) {
   const query = useSearchParams();
-
   const month = query.get('month');
   const year = query.get('year');
+
+  const { preferences } = usePreferences();
   return (
     <>
       <div className="md:hidden mb-4 w-full">
@@ -40,7 +42,7 @@ export default function ExpensesDashboard({
               </div>
               <div className="flex flex-col gap-4">
                 <DateChanger className="hidden md:flex justify-between" />
-                <SourceSummary />
+                {preferences.track_sources && <SourceSummary />}
                 <ExpensesByCategory expensesByCategory={expensesByCategory} />
               </div>
             </div>

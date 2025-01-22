@@ -15,6 +15,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState
 } from 'react';
 import { useSource } from './source-context';
@@ -24,6 +25,7 @@ interface ExpenseContextType {
   currentFilters?: Filter;
   minAmount: number;
   maxAmount: number;
+  totalAmount: number;
   setCurrentFilters: React.Dispatch<SetStateAction<Filter | undefined>>;
   refreshExpenses: () => Promise<void>;
   addExpense: (
@@ -165,13 +167,29 @@ export const ExpenseProvider = ({
     setExpenses(sortedExpenses);
   };
 
+  const minAmount = useMemo(
+    () => Math.min(...initialExpenses.map((expense) => expense.amount)),
+    [initialExpenses]
+  );
+
+  const maxAmount = useMemo(
+    () => Math.max(...initialExpenses.map((expense) => expense.amount)),
+    [initialExpenses]
+  );
+
+  const totalAmount = useMemo(
+    () => initialExpenses.reduce((acc, expense) => acc + expense.amount, 0),
+    [initialExpenses]
+  );
+
   return (
     <ExpenseContext.Provider
       value={{
         expenses,
         currentFilters,
-        minAmount: Math.min(...initialExpenses.map((expense) => expense.amount)),
-        maxAmount: Math.max(...initialExpenses.map((expense) => expense.amount)),
+        minAmount,
+        maxAmount,
+        totalAmount,
         setCurrentFilters,
         refreshExpenses,
         addExpense,

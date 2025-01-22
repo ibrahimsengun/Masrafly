@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useExpense } from '@/context/expense-context';
+import { usePreferences } from '@/context/preferences-context';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { Expense } from '@/types/expense';
 import { format } from 'date-fns';
@@ -24,6 +25,7 @@ import {
 
 export default function ExpenseList() {
   const { expenses, deleteExpense } = useExpense();
+  const { preferences } = usePreferences();
   const isMobile = useMediaQuery('(max-width: 768px)');
   const MobileWrapper = ({ children }: { children: ReactNode }) => {
     return isMobile ? (
@@ -84,7 +86,9 @@ export default function ExpenseList() {
                       <h3 className="text-lg font-bold">
                         <PriceFormatter price={expense.amount} />
                       </h3>
-                      <div className="text-sm text-muted-foreground">{expense.source?.name}</div>
+                      {preferences.track_sources && (
+                        <div className="text-sm text-muted-foreground">{expense.source?.name}</div>
+                      )}
                     </div>
                     <div className="ml-4 flex">
                       <ExpenseFormDialog isEdit expense={expense} />

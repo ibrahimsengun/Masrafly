@@ -21,9 +21,11 @@ import { Slider } from '@/components/ui/slider';
 import { usePreferences } from '@/context/preferences-context';
 import { useToast } from '@/hooks/use-toast';
 import { CurrencyCode, Preferences } from '@/types/preferences';
-import { Globe, Hash, RotateCcw, SunMoon } from 'lucide-react';
+import { Globe, Hash, Info, RotateCcw, SunMoon, Wallet } from 'lucide-react';
 import { useState } from 'react';
 import { ThemeSwitcher } from './theme-switcher';
+import { Switch } from './ui/switch';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 
 const currencies = [
   { value: 'USD', label: 'US Dollar (USD)', code: 'en-US' },
@@ -81,6 +83,36 @@ export default function PreferencesDashboard() {
           <CardDescription>Customize how financial data is displayed.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
+          <div className="flex flex-row justify-between items-center">
+            <div className="flex flex-col items-center justify-center gap-1">
+              <Label htmlFor="trackSources" className="flex items-center gap-2 text-lg">
+                <span className="flex justify-center border p-2 rounded-lg">
+                  <Wallet className="w-6 h-6" />
+                </span>
+                Track Sources
+                <TooltipProvider>
+                  <Tooltip delayDuration={0}>
+                    <TooltipTrigger>
+                      <Info size={14} className="text-muted-foreground" />
+                    </TooltipTrigger>
+                    <TooltipContent align="center" className="w-64">
+                      <span className="text-muted-foreground text-sm">
+                        Source is a feature that allows tracking which asset or method was used for
+                        a payment when making an expense.
+                      </span>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </Label>
+            </div>
+            <Switch
+              id="trackSources"
+              checked={preferences.track_sources}
+              onCheckedChange={(checked: boolean) =>
+                setPreferences((prev) => ({ ...prev, track_sources: checked }))
+              }
+            />
+          </div>
           <div className="flex flex-row justify-between">
             <Label htmlFor="theme" className="flex items-center gap-2 text-lg">
               <span className="flex justify-center border p-2 rounded-lg">
@@ -89,10 +121,9 @@ export default function PreferencesDashboard() {
               Theme
             </Label>
             <div>
-              <ThemeSwitcher />
+              <ThemeSwitcher showText />
             </div>
           </div>
-
           <div className="flex flex-row justify-between">
             <Label htmlFor="currency" className="flex items-center gap-2 text-lg">
               <span className="flex justify-center border p-2 rounded-lg">
@@ -113,7 +144,6 @@ export default function PreferencesDashboard() {
               </SelectContent>
             </Select>
           </div>
-
           <div className="flex flex-row justify-between">
             <Label htmlFor="decimalLength" className="flex items-center gap-2 text-lg">
               <span className="flex justify-center border p-2 rounded-lg">
@@ -134,8 +164,7 @@ export default function PreferencesDashboard() {
               className="w-52"
             />
           </div>
-
-          <div className="p-4 rounded-lg">
+          <div className="flex flex-col items-end justify-end p-4 rounded-lg">
             <h3 className="text-sm font-medium mb-2">Preview</h3>
             <p className="text-2xl font-bold">
               <FormatPreview value={1234567.89} />

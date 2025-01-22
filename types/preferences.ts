@@ -4,6 +4,7 @@ export interface Preferences {
   currency: string;
   number_format: 'comma' | 'dot';
   decimal_length: number;
+  track_sources: boolean;
   created_at: string;
   updated_at: string;
 }

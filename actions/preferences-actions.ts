@@ -30,7 +30,8 @@ export const getPreferencesAction = async (): Promise<Preferences> => {
       user_id: user.id,
       currency: 'USD',
       number_format: 'comma',
-      decimal_length: 2
+      decimal_length: 2,
+      track_sources: true
     } as Preferences)
     .select()
     .single();

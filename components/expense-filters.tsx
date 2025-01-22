@@ -2,6 +2,7 @@
 
 import { useCategory } from '@/context/category-context';
 import { useExpense } from '@/context/expense-context';
+import { usePreferences } from '@/context/preferences-context';
 import { useSource } from '@/context/source-context';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { OrderEnum, orderOptions } from '@/types/expense';
@@ -17,6 +18,7 @@ import { Slider } from './ui/slider';
 
 export default function ExpenseFilters() {
   const { currentFilters, minAmount, maxAmount, setCurrentFilters, orderExpenses } = useExpense();
+  const { preferences } = usePreferences();
   const { categories } = useCategory();
   const { sources } = useSource();
   const isMobile = useMediaQuery('(max-width: 768px)');
@@ -81,7 +83,7 @@ export default function ExpenseFilters() {
         Filters
       </Button>
       <div
-        className="flex-row justify-between "
+        className="flex flex-col md:flex-row md:justify-between gap-4"
         style={{ display: openFilters || !isMobile ? 'flex' : 'none' }}
       >
         <div className="flex flex-row flex-wrap gap-4">
@@ -131,47 +133,49 @@ export default function ExpenseFilters() {
             </PopoverContent>
           </Popover>
 
-          <Popover modal>
-            <PopoverTrigger asChild>
-              <Button
-                variant={currentFilters?.selectedSourceIds?.length ? 'default' : 'outline'}
-                className="flex flex-row gap-2"
-                size="sm"
-              >
-                <Wallet className="w-4" /> Source
-                {(currentFilters?.selectedSourceIds?.length || 0) > 0 ? (
-                  <span className="font-bold">{`(${currentFilters?.selectedSourceIds?.length})`}</span>
-                ) : (
-                  ''
-                )}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent align="start">
-              <div className="flex flex-col gap-4">
-                <span className="text-base">Filter Sources</span>
-                <div className="flex flex-col gap-2">
-                  {sources.map((source) => (
-                    <div key={source.id} className="flex flex-row gap-2 items-center">
-                      <Checkbox
-                        id={source.id}
-                        value={source.id}
-                        checked={currentFilters?.selectedSourceIds?.includes(source.id)}
-                        onCheckedChange={(checked) =>
-                          handleItemChange(checked as boolean, source.id, 'source')
-                        }
-                      />
-                      <Label
-                        htmlFor={source.id}
-                        className="flex flex-row gap-2 items-center text-base"
-                      >
-                        {source.name}
-                      </Label>
-                    </div>
-                  ))}
+          {preferences.track_sources && (
+            <Popover modal>
+              <PopoverTrigger asChild>
+                <Button
+                  variant={currentFilters?.selectedSourceIds?.length ? 'default' : 'outline'}
+                  className="flex flex-row gap-2"
+                  size="sm"
+                >
+                  <Wallet className="w-4" /> Source
+                  {(currentFilters?.selectedSourceIds?.length || 0) > 0 ? (
+                    <span className="font-bold">{`(${currentFilters?.selectedSourceIds?.length})`}</span>
+                  ) : (
+                    ''
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent align="start">
+                <div className="flex flex-col gap-4">
+                  <span className="text-base">Filter Sources</span>
+                  <div className="flex flex-col gap-2">
+                    {sources.map((source) => (
+                      <div key={source.id} className="flex flex-row gap-2 items-center">
+                        <Checkbox
+                          id={source.id}
+                          value={source.id}
+                          checked={currentFilters?.selectedSourceIds?.includes(source.id)}
+                          onCheckedChange={(checked) =>
+                            handleItemChange(checked as boolean, source.id, 'source')
+                          }
+                        />
+                        <Label
+                          htmlFor={source.id}
+                          className="flex flex-row gap-2 items-center text-base"
+                        >
+                          {source.name}
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </PopoverContent>
-          </Popover>
+              </PopoverContent>
+            </Popover>
+          )}
 
           <Popover modal>
             <PopoverTrigger asChild>
@@ -208,7 +212,22 @@ export default function ExpenseFilters() {
           </Popover>
         </div>
 
-        <div>
+        <div className="flex flex-row items-center gap-2">
+          {((currentFilters?.selectedCategoryIds &&
+            currentFilters?.selectedCategoryIds?.length > 0) ||
+            (currentFilters?.selectedSourceIds && currentFilters?.selectedSourceIds?.length > 0) ||
+            (currentFilters?.maxAmount && currentFilters?.maxAmount > 0) ||
+            (currentFilters?.minAmount && currentFilters?.minAmount > 0)) && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentFilters({ selectedCategoryIds: [], selectedSourceIds: [] })}
+              className="flex flex-row items-center gap-2"
+            >
+              <ListRestart className="w-5" />
+              Reset Filters
+            </Button>
+          )}
           <Select value={selectedOrderType} onValueChange={handleSelectChange}>
             <SelectTrigger className="w-42 h-9">
               <SelectValue
@@ -233,15 +252,7 @@ export default function ExpenseFilters() {
         </div>
       </div>
 
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => setCurrentFilters({ selectedCategoryIds: [], selectedSourceIds: [] })}
-        className="flex flex-row items-center gap-2"
-      >
-        <ListRestart className="w-5" />
-        Reset Filters
-      </Button>
+      <div className="flex flex-row justify-end"></div>
     </div>
   );
 }

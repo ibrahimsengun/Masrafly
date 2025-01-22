@@ -1,15 +1,17 @@
 'use client';
 
+import { useExpense } from '@/context/expense-context';
 import { ExpenseByCategory } from '@/types/expense';
 import { AnimatePresence, motion } from 'framer-motion';
 import PriceFormatter from './price-formatter';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card';
 
 export default function ExpensesByCategory({
   expensesByCategory
 }: {
   expensesByCategory: ExpenseByCategory[];
 }) {
+  const { totalAmount } = useExpense();
   return (
     <Card>
       <CardHeader>
@@ -53,6 +55,14 @@ export default function ExpensesByCategory({
           </div>
         </AnimatePresence>
       </CardContent>
+      <CardFooter>
+        <div className="flex w-full justify-between">
+          <span>Total</span>
+          <span>
+            <PriceFormatter price={totalAmount} />
+          </span>
+        </div>
+      </CardFooter>
     </Card>
   );
 }

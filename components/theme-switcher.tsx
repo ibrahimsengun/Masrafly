@@ -12,7 +12,7 @@ import { Laptop, Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 
-const ThemeSwitcher = () => {
+const ThemeSwitcher = ({ showText = false }: { showText?: boolean }) => {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
 
@@ -32,11 +32,20 @@ const ThemeSwitcher = () => {
       <DropdownMenuTrigger asChild>
         <Button variant="outline">
           {theme === 'light' ? (
-            <Sun key="light" size={ICON_SIZE} className={'text-muted-foreground'} />
+            <span className="flex flex-row gap-2 items-center">
+              <Sun key="light" size={ICON_SIZE} className={'text-muted-foreground'} />
+              {showText && 'Light'}
+            </span>
           ) : theme === 'dark' ? (
-            <Moon key="dark" size={ICON_SIZE} className={'text-muted-foreground'} />
+            <span className="flex flex-row gap-2 items-center">
+              <Moon key="dark" size={ICON_SIZE} className={'text-muted-foreground'} />
+              {showText && 'Dark'}
+            </span>
           ) : (
-            <Laptop key="system" size={ICON_SIZE} className={'text-muted-foreground'} />
+            <span className="flex flex-row gap-2 items-center">
+              <Laptop key="system" size={ICON_SIZE} className={'text-muted-foreground'} />
+              {showText && 'System'}
+            </span>
           )}
         </Button>
       </DropdownMenuTrigger>
