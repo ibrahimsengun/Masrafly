@@ -21,6 +21,21 @@ interface CategoryFormProps {
   closeDialog?: () => void;
 }
 
+const presetColors = [
+  '#FF5733',
+  '#33FF57',
+  '#3357FF',
+  '#FF33A1',
+  '#FFC733',
+  '#33FFF6',
+  '#8E44AD',
+  '#E74C3C',
+  '#2ECC71',
+  '#5B5EA6',
+  '#34495E',
+  '#E67E22'
+];
+
 export default function CategoryForm({ isEdit, editingCategory, closeDialog }: CategoryFormProps) {
   const { updateCategory, createCategory } = useCategory();
   const {
@@ -97,7 +112,24 @@ export default function CategoryForm({ isEdit, editingCategory, closeDialog }: C
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
           />
         </div>
+
         {errors.color && <p className="mt-1 text-sm text-red-600">{errors.color.message}</p>}
+      </div>
+
+      <div>
+        <Label htmlFor="preset-colors" className="block text-sm font-medium text-gray-700">
+          Preset Colors
+        </Label>
+        <div className="flex flex-row gap-2 flex-wrap mt-2">
+          {presetColors.map((c) => (
+            <div
+              className="w-8 h-8 cursor-pointer rounded-full transition-transform transform hover:scale-110 hover:ring-2 hover:ring-offset-2 hover:ring-gray-400"
+              key={c}
+              style={{ backgroundColor: c }}
+              onClick={() => setColor(c)}
+            />
+          ))}
+        </div>
       </div>
 
       <Button type="submit">{isEdit ? 'Update' : 'Add'}</Button>

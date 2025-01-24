@@ -63,9 +63,9 @@ export default function CategoryList() {
               <Button onClick={() => setIsDialogOpen(true)}>Create Your First Category</Button>
             </div>
           ) : (
-            <ScrollArea className="h-[50vh] md:h-[calc(80vh-170px)] pr-4">
+            <ScrollArea className="h-[69vh] md:h-[calc(80vh-170px)] pr-4">
               <AnimatePresence>
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-4 lg:grid-cols-3">
                   {categories.map((category) => (
                     <motion.div
                       key={category.id}
@@ -75,14 +75,14 @@ export default function CategoryList() {
                       transition={{ duration: 0.2 }}
                     >
                       <Card className="flex flex-col justify-between">
-                        <CardContent className="p-3 pt-6">
+                        <CardContent className="p-1 md:pt-3 md:pb-0">
                           <div className="flex flex-col items-center gap-2 mb-2">
                             <div className="flex items-center space-x-2">
                               <div
                                 className="w-4 h-4 rounded-full"
                                 style={{ backgroundColor: category.color }}
                               />
-                              <h3 className="text-lg font-semibold">{category.name}</h3>
+                              <h3 className="text-sm md:text-lg font-semibold">{category.name}</h3>
                             </div>
                             <div className="flex space-x-1">
                               <Button
