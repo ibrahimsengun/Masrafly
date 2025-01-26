@@ -1,10 +1,12 @@
 'use client';
 
+import { usePreferences } from '@/context/preferences-context';
 import { useSource } from '@/context/source-context';
 import SourceForm from '@/forms/source-form';
 import { Source } from '@/types/source';
 import { format } from 'date-fns';
 import { Edit, Trash } from 'lucide-react';
+import Link from 'next/link';
 import { useState } from 'react';
 import { AddSourceButton } from './add-source-button';
 import PriceFormatter from './price-formatter';
@@ -24,6 +26,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 
 export const SourceTable = () => {
   const { sources, deleteSource } = useSource();
+  const { preferences } = usePreferences();
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
   const [editingSource, setEditingSource] = useState<Source>();
   return (
@@ -31,77 +34,89 @@ export const SourceTable = () => {
       <CardHeader>
         <div className="flex justify-between">
           <CardTitle>Your Sources</CardTitle>
-          <AddSourceButton />
+          {preferences.track_sources && <AddSourceButton />}
         </div>
       </CardHeader>
       <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Balance</TableHead>
-              <TableHead>Created At</TableHead>
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {sources.map((source) => {
-              return (
-                <TableRow key={source.id}>
-                  <TableCell className="font-medium">{source.name}</TableCell>
-                  <TableCell>
-                    <PriceFormatter price={source.balance} />
-                  </TableCell>
-                  <TableCell>{format(source.created_at, 'PPP')}</TableCell>
-                  <TableCell>
-                    <div className="flex space-x-2">
-                      <Dialog open={openUpdateDialog} onOpenChange={setOpenUpdateDialog}>
-                        <DialogTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => setEditingSource(source)}
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                          <DialogTitle>Update Source</DialogTitle>
-                          <SourceForm
-                            isEdit
-                            editingSource={editingSource}
-                            closeDialog={() => setOpenUpdateDialog(false)}
-                          />
-                        </DialogContent>
-                      </Dialog>
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button variant="ghost" size="sm">
-                            <Trash className="h-4 w-4" />
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                          <DialogHeader>
-                            <DialogTitle>Are you sure?</DialogTitle>
-                          </DialogHeader>
-                          <DialogDescription>You remove "{source.name}" source.</DialogDescription>
-                          <DialogFooter>
-                            <DialogClose asChild>
-                              <Button variant="outline">No</Button>
-                            </DialogClose>
-                            <Button variant="default" onClick={() => deleteSource(source.id)}>
-                              Yes
+        {preferences.track_sources ? (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead>Balance</TableHead>
+                <TableHead>Created At</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {sources.map((source) => {
+                return (
+                  <TableRow key={source.id}>
+                    <TableCell className="font-medium">{source.name}</TableCell>
+                    <TableCell>
+                      <PriceFormatter price={source.balance} />
+                    </TableCell>
+                    <TableCell>{format(source.created_at, 'PPP')}</TableCell>
+                    <TableCell>
+                      <div className="flex space-x-2">
+                        <Dialog open={openUpdateDialog} onOpenChange={setOpenUpdateDialog}>
+                          <DialogTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setEditingSource(source)}
+                            >
+                              <Edit className="h-4 w-4" />
                             </Button>
-                          </DialogFooter>
-                        </DialogContent>
-                      </Dialog>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <DialogTitle>Update Source</DialogTitle>
+                            <SourceForm
+                              isEdit
+                              editingSource={editingSource}
+                              closeDialog={() => setOpenUpdateDialog(false)}
+                            />
+                          </DialogContent>
+                        </Dialog>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button variant="ghost" size="sm">
+                              <Trash className="h-4 w-4" />
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle>Are you sure?</DialogTitle>
+                            </DialogHeader>
+                            <DialogDescription>
+                              You remove "{source.name}" source.
+                            </DialogDescription>
+                            <DialogFooter>
+                              <DialogClose asChild>
+                                <Button variant="outline">No</Button>
+                              </DialogClose>
+                              <Button variant="default" onClick={() => deleteSource(source.id)}>
+                                Yes
+                              </Button>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        ) : (
+          <div>
+            Source tracking feature is disabled. You can go to the{' '}
+            <Link href="/preferences" style={{ textDecoration: 'underline' }}>
+              preferences
+            </Link>{' '}
+            page to enable it.
+          </div>
+        )}
       </CardContent>
     </Card>
   );

@@ -38,14 +38,17 @@ const currencies = [
 export default function PreferencesDashboard() {
   const { preferences: defaultPreferences, updatePreferences } = usePreferences();
   const [preferences, setPreferences] = useState<Preferences>(defaultPreferences!);
+  const [isUpdated, setIsUpdated] = useState(false);
   const { toast } = useToast();
 
   const handleCurrencyChange = (value: string) => {
     setPreferences((prev) => ({ ...prev, currency: value }));
+    setIsUpdated(true);
   };
 
   const handleDecimalLengthChange = (value: number[]) => {
     setPreferences((prev) => ({ ...prev, decimal_length: value[0] }));
+    setIsUpdated(true);
   };
 
   const handleSave = () => {
@@ -54,6 +57,7 @@ export default function PreferencesDashboard() {
       title: 'Preferences saved',
       description: 'Your display preferences have been updated successfully.'
     });
+    setIsUpdated(false);
   };
 
   const handleReset = () => {
@@ -62,6 +66,7 @@ export default function PreferencesDashboard() {
       title: 'Preferences reset',
       description: 'Your display preferences have been reset to default values.'
     });
+    setIsUpdated(false);
   };
 
   const FormatPreview = ({ value }: { value: number }) => {
@@ -108,9 +113,10 @@ export default function PreferencesDashboard() {
             <Switch
               id="trackSources"
               checked={preferences.track_sources}
-              onCheckedChange={(checked: boolean) =>
-                setPreferences((prev) => ({ ...prev, track_sources: checked }))
-              }
+              onCheckedChange={(checked: boolean) => {
+                setPreferences((prev) => ({ ...prev, track_sources: checked }));
+                setIsUpdated(true);
+              }}
             />
           </div>
           <div className="flex flex-row justify-between">
@@ -171,13 +177,15 @@ export default function PreferencesDashboard() {
             </p>
           </div>
         </CardContent>
-        <CardFooter className="flex justify-between">
-          <Button variant="outline" onClick={handleReset}>
-            <RotateCcw className="mr-2 h-4 w-4" />
-            Reset
-          </Button>
-          <Button onClick={handleSave}>Save Preferences</Button>
-        </CardFooter>
+        {isUpdated && (
+          <CardFooter className="flex justify-between">
+            <Button variant="outline" onClick={handleReset}>
+              <RotateCcw className="mr-2 h-4 w-4" />
+              Reset
+            </Button>
+            <Button onClick={handleSave}>Save Preferences</Button>
+          </CardFooter>
+        )}
       </Card>
     </div>
   );
