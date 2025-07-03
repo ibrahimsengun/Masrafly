@@ -72,7 +72,7 @@ export default function ExpenseFilters() {
   const [openFilters, setOpenFilters] = useState(!isMobile);
 
   return (
-    <div className="flex flex-col gap-4 my-4 md:mt-0">
+    <div className="flex flex-col gap-4 mt-4 md:mt-0">
       <Button
         size="sm"
         variant={openFilters ? 'default' : 'outline'}
