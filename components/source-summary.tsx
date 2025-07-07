@@ -5,9 +5,12 @@ import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import PriceFormatter from './price-formatter';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { usePreferences } from '@/context/preferences-context';
 
 export default function SourceSummary() {
   const { sources } = useSource();
+  const { preferences } = usePreferences();
+  if (!preferences.track_sources) return null;
   return (
     <Link href="/sources">
       <Card className="hover:bg-muted/50 transition-colors">

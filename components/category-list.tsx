@@ -24,8 +24,8 @@ export default function CategoryList() {
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
 
   return (
-    <div className="min-h-[70vh] w-full">
-      <Card className="mx-auto">
+    <div className="container mx-auto min-h-[70vh] w-full">
+      <Card>
         <CardHeader className="flex flex-row justify-between pt-6">
           <CardTitle className="text-lg md:text-2xl font-semibold leading-none tracking-tight">
             Manage Categories
@@ -65,7 +65,7 @@ export default function CategoryList() {
           ) : (
             <ScrollArea className="h-[69vh] md:h-[calc(80vh-170px)] pr-4">
               <AnimatePresence>
-                <div className="grid gap-4 lg:grid-cols-3">
+                <div className="flex flex-col gap-4">
                   {categories.map((category) => (
                     <motion.div
                       key={category.id}
@@ -75,8 +75,8 @@ export default function CategoryList() {
                       transition={{ duration: 0.2 }}
                     >
                       <Card className="flex flex-col justify-between">
-                        <CardContent className="p-1 md:pt-3 md:pb-0">
-                          <div className="flex flex-col items-center gap-2 mb-2">
+                        <CardContent className="px-4 py-1 md:pt-3 md:pb-0">
+                          <div className="flex items-center justify-between gap-2 mb-2">
                             <div className="flex items-center space-x-2">
                               <div
                                 className="w-4 h-4 rounded-full"

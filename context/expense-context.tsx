@@ -1,4 +1,3 @@
-// context/ExpenseContext.tsx
 'use client';
 
 import {
@@ -168,12 +167,18 @@ export const ExpenseProvider = ({
   };
 
   const minAmount = useMemo(
-    () => Math.min(...initialExpenses.map((expense) => expense.amount)),
+    () =>
+      initialExpenses.length === 0
+        ? 0
+        : Math.min(...initialExpenses.map((expense) => expense.amount)),
     [initialExpenses]
   );
 
   const maxAmount = useMemo(
-    () => Math.max(...initialExpenses.map((expense) => expense.amount)),
+    () =>
+      initialExpenses.length === 0
+        ? 0
+        : Math.max(...initialExpenses.map((expense) => expense.amount)),
     [initialExpenses]
   );
 

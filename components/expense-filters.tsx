@@ -181,8 +181,7 @@ export default function ExpenseFilters() {
             <PopoverTrigger asChild>
               <Button
                 variant={
-                  (currentFilters?.minAmount ?? 0) == minAmount ||
-                  (currentFilters?.maxAmount ?? 0) == maxAmount
+                  currentFilters?.minAmount == minAmount || currentFilters?.maxAmount == maxAmount
                     ? 'default'
                     : 'outline'
                 }

@@ -42,7 +42,7 @@ export default function ExpensesDashboard({
               </div>
               <div className="flex flex-col gap-4">
                 <DateChanger className="hidden md:flex justify-between" />
-                {preferences.track_sources && <SourceSummary />}
+                <SourceSummary />
                 <ExpensesByCategory expensesByCategory={expensesByCategory} />
               </div>
             </div>
