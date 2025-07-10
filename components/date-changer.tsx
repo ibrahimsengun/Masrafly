@@ -37,9 +37,9 @@ export default function DateChanger({ className }: { className?: string }) {
         currentMont--;
       }
     }
+    router.push(`?month=${currentMont}&year=${currentYear}`);
     setMonth(currentMont);
     setYear(currentYear);
-    router.push(`?month=${currentMont}&year=${currentYear}`);
   };
   return (
     <div className={cn('flex flex-row justify-evenly items-center w-full', className)}>

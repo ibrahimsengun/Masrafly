@@ -155,7 +155,7 @@ export default function ExpenseForm({
               onKeyDown={(e) => {
                 if (e.key == 'Enter') {
                   e.preventDefault();
-                  setOpenCalendar(true);
+                  setOpenCategorySelect(true);
                 }
               }}
             >
@@ -163,6 +163,50 @@ export default function ExpenseForm({
               <FormControl>
                 <Input type="text" {...field} />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="categoryId"
+          render={({ field }) => (
+            <FormItem
+              onKeyDown={(e) => {
+                if (e.key == 'Enter') {
+                  e.preventDefault();
+                  setOpenCalendar(true);
+                }
+              }}
+            >
+              <FormLabel>Category</FormLabel>
+              <Select
+                value={field.value}
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                open={openCategorySelect}
+                onOpenChange={setOpenCategorySelect}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a category" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {categories.map((category) => (
+                    <SelectItem key={category.id} value={category.id}>
+                      <div className="flex flex-row gap-2 items-center">
+                        <span
+                          className="w-3 h-3 rounded-full"
+                          style={{ backgroundColor: category.color }}
+                        />
+                        <span>{category.name}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}
@@ -194,49 +238,15 @@ export default function ExpenseForm({
                     mode="single"
                     selected={field.value}
                     onSelect={(e) => {
-                      field.onChange(e);
+                      // Eğer seçilen tarih undefined ise, mevcut değeri koru
+                      if (e !== undefined) {
+                        field.onChange(e);
+                      }
                       setOpenCalendar(false);
-                      if (!isEdit) setOpenCategorySelect(true);
                     }}
                   />
                 </PopoverContent>
               </Popover>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="categoryId"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Category</FormLabel>
-              <Select
-                value={field.value}
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                open={openCategorySelect}
-                onOpenChange={setOpenCategorySelect}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a category" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {categories.map((category) => (
-                    <SelectItem key={category.id} value={category.id}>
-                      <div className="flex flex-row gap-2 items-center">
-                        <span
-                          className="w-3 h-3 rounded-full"
-                          style={{ backgroundColor: category.color }}
-                        />
-                        <span>{category.name}</span>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
               <FormMessage />
             </FormItem>
           )}

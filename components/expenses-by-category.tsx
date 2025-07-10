@@ -15,7 +15,7 @@ export default function ExpensesByCategory({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="md:text-lg">Expenses By Category</CardTitle>
+        <CardTitle className="md:text-base lg:text-lg">Expenses By Category</CardTitle>
       </CardHeader>
       <CardContent>
         <AnimatePresence>
@@ -38,7 +38,7 @@ export default function ExpensesByCategory({
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.2 }}
               >
-                <div className="flex justify-between">
+                <div className="flex sm:flex-row md:flex-col lg:flex-row justify-between">
                   <div className="flex flex-row gap-1 items-center">
                     <div
                       className="w-3 h-3 rounded-full mr-2"

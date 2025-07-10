@@ -22,7 +22,7 @@ export default function CategoryList() {
   const { categories, deleteCategory } = useCategory();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
-
+  console.log('categories', categories);
   return (
     <div className="container mx-auto min-h-[70vh] w-full">
       <Card>

@@ -1,7 +1,7 @@
 'use client';
 
 import { User } from '@supabase/supabase-js';
-import { AlignJustify, ChartNoAxesGantt, Rainbow, Wallet } from 'lucide-react';
+import { AlignJustify, Banknote, ChartNoAxesGantt, Rainbow, Wallet } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
@@ -19,6 +19,7 @@ export const Header = ({ user }: { user: User | null }) => {
   const protectedLinks = isLoggedIn
     ? [
         { url: '/dashboard', label: 'Dashboard', icon: <ChartNoAxesGantt /> },
+        { url: '/expenses', label: 'Expenses', icon: <Banknote /> },
         { url: '/sources', label: 'Sources', icon: <Wallet /> },
         { url: '/categories', label: 'Categories', icon: <Rainbow /> }
       ]
